@@ -6,7 +6,7 @@
       <div class="row justify-center" style="margin-top: 10px">
         <q-table
           style="max-width: 90vw"
-          :data="order_items"
+          :rows="order_items"
           :columns="columns"
           row-key="id"
           color="secondary"
@@ -18,65 +18,65 @@
             >
           </template>
           <template v-slot:top-left="props">
-            <q-btn
-              v-if="props != null && order_status !== 'finished'"
-              title="返回进行中订单列表"
-              color="purple-7"
-              icon="keyboard_return"
-              label="返回"
-              @click="goPage('/order-manage')"
-            />
-            <q-btn
-              v-if="props != null && order_status === 'finished'"
-              title="返回历史订单列表"
-              color="purple-7"
-              icon="keyboard_return"
-              label="返回"
-              @click="goPage('/report-manage')"
-            />
-            <q-btn
-              :disabled="order_status === 'finished'"
-              style="margin-left: 10px"
-              v-if="props != null"
-              title="分配菜品到厨位"
-              color="teal-6"
-              label="分配到厨位"
-              @click="assignItems"
-              icon="assignment_returned"
-            />
-            <q-btn
-              style="margin-left: 10px"
-              v-if="props != null && order_status !== 'finished'"
-              title="结束订单(已买单)"
-              color="positive"
-              label="结束订单"
-              @click="finishOrder"
-              icon="done all"
-            />
-            <q-btn
-              style="margin-left: 10px"
-              v-if="props != null && order_status !== 'finished'"
-              title="加菜"
-              color="blue"
-              label="加菜"
-              @click="toAddDishPage"
-              icon="add"
-            />
-            <q-chip
-              color="blue-grey-13"
-              v-if="props != null && order_status === 'finished'"
-              style="margin-left: 10px"
-              >已完成</q-chip
-            >
-            <q-btn
-              v-if="props != null"
-              style="margin-left: 10px"
-              title="刷新列表"
-              round
-              color="blue"
-              @click="refreshItems"
-              icon="refresh"
-            />
+            <div class="q-pa-md q-gutter-sm">
+              <q-btn
+                v-if="props != null && order_status !== 'finished'"
+                title="返回进行中订单列表"
+                color="purple-7"
+                icon="keyboard_return"
+                label="返回"
+                @click="goPage('/order-manage')"
+              />
+              <q-btn
+                v-if="props != null && order_status === 'finished'"
+                title="返回历史订单列表"
+                color="purple-7"
+                icon="keyboard_return"
+                label="返回"
+                @click="goPage('/report-manage')"
+              />
+              <q-btn
+                :disabled="order_status === 'finished'"
+                v-if="props != null"
+                title="分配菜品到厨位"
+                color="teal-6"
+                label="分配到厨位"
+                @click="assignItems"
+                icon="assignment_returned"
+              />
+              <q-btn
+                v-if="props != null && order_status !== 'finished'"
+                title="结束订单(已买单)"
+                color="positive"
+                label="结束订单"
+                @click="finishOrder"
+                icon="done_all"
+              />
+              <q-btn
+                style="margin-left: 10px"
+                v-if="props != null && order_status !== 'finished'"
+                title="加菜"
+                color="blue"
+                label="加菜"
+                @click="toAddDishPage"
+                icon="add"
+              />
+              <q-chip
+                color="blue-grey-13"
+                v-if="props != null && order_status === 'finished'"
+                style="margin-left: 10px"
+                >已完成</q-chip
+              >
+              <q-btn
+                v-if="props != null"
+                style="margin-left: 10px"
+                title="刷新列表"
+                round
+                color="blue"
+                @click="refreshItems"
+                icon="refresh"
+              />
+            </div>
           </template>
           <q-td style="min-width: 115px" :props="props">
             <q-chip v-if="props.value === 'unassigned'" small color="brown-4"
@@ -286,7 +286,7 @@ export default {
     this.loadOrderDetail(this.order_id)
     this.loadOrderItemsByOrderId(this.order_id, this.table_page_size)
     this.interval = setInterval(() => {
-      // this.refreshItems()
+      this.refreshItems()
       console.log("refresh order detail items list")
     }, 20000)
   },
