@@ -26,7 +26,7 @@
           class="q-ma-sm"
         >
           <q-card>
-            <img src="statics/chuwei.png" />
+            <img src="src/statics/chuwei.png" />
             <q-card-section>
               {{ position.producer_number }}
               <span>{{ position.description }}</span>
@@ -37,9 +37,13 @@
             <q-btn @click="editPosition(position.id)" flat>编辑</q-btn>
           </q-card-actions>
           <q-item>
-            <q-item-main>
+            <q-item-section>
               <q-btn-toggle
-                @input="toggleStatus(position.status, position.id)"
+                @update:modelValue="
+                  (val) => {
+                    toggleStatus(val, position.id)
+                  }
+                "
                 v-model="position.status"
                 push
                 glossy
@@ -50,7 +54,7 @@
                   { label: '离线', value: 'offline' },
                 ]"
               />
-            </q-item-main>
+            </q-item-section>
           </q-item>
         </q-card>
       </div>
@@ -96,7 +100,7 @@
           <q-btn
             color="primary"
             label="创建"
-            @click="executeNewPosition(props.ok)"
+            @click="executeNewPosition()"
             v-close-popup
           />
         </q-card-actions>
@@ -121,7 +125,7 @@
         </q-field>
       </div>
       <q-card-actions>
-        <q-btn color="primary" label="更新" @click="executeEditDishProducer(props.ok)" />
+        <q-btn color="primary" label="更新" @click="executeEditDishProducer()" />
       </q-card-actions>
     </q-dialog>
   </q-page>
@@ -141,7 +145,7 @@
 </style>
 
 <script>
-import base from "../mixins/base";
+import base from "../mixins/base"
 export default {
   name: "KitchenManage",
   data() {
@@ -158,11 +162,11 @@ export default {
       positions: [],
       total: 0,
       page_size: 1,
-    };
+    }
   },
   mixins: [base],
   mounted() {
-    this.loadKPositions();
+    this.loadKPositions()
   },
   methods: {
     toggleStatus(status, id) {
@@ -172,24 +176,24 @@ export default {
         })
         .then((response) => {
           if (response.data.ok === true) {
-            this.notifySuccess(response.data.message);
+            this.notifySuccess(response.data.message)
           } else {
-            this.notifyFail(response.data.message);
+            this.notifyFail(response.data.message)
           }
-          this.loadKPositions();
+          this.loadKPositions()
         })
         .catch((e) => {
-          this.notifyFail(e.response.data.message);
-        });
+          this.notifyFail(e.response.data.message)
+        })
     },
     reloadPage(val) {
-      this.current_page = val;
-      this.loadKPositions();
+      this.current_page = val
+      this.loadKPositions()
     },
     executeEditDishProducer() {
       if (this.checkStringNull(this.k_dish_producer_no)) {
-        this.notifyWarn("厨位号不能为空");
-        return;
+        this.notifyWarn("厨位号不能为空")
+        return
       }
       this.$api
         .put("/api/v1/dish-producer/" + this.k_dish_producer_id, {
@@ -198,29 +202,29 @@ export default {
         })
         .then((response) => {
           if (response.data.ok === true) {
-            this.notifySuccess(response.data.message);
+            this.notifySuccess(response.data.message)
           } else {
-            this.notifyFail(response.data.message);
+            this.notifyFail(response.data.message)
           }
-          this.loadKPositions();
-          this.editDishProducerDialog = false;
+          this.loadKPositions()
+          this.editDishProducerDialog = false
         })
         .catch((e) => {
-          this.notifyFail(e.response.data.message);
-        });
+          this.notifyFail(e.response.data.message)
+        })
     },
     editPosition(id) {
       this.$api
         .get("/api/v1/dish-producer/" + id)
         .then((response) => {
-          this.k_dish_producer_no = response.data.producer_number;
-          this.k_dish_producer_description = response.data.description;
-          this.k_dish_producer_id = response.data.id;
+          this.k_dish_producer_no = response.data.producer_number
+          this.k_dish_producer_description = response.data.description
+          this.k_dish_producer_id = response.data.id
         })
         .catch((e) => {
-          this.notifyFail(e.response.data.message);
-        });
-      this.editDishProducerDialog = true;
+          this.notifyFail(e.response.data.message)
+        })
+      this.editDishProducerDialog = true
     },
     deletePosition(id) {
       this.$q
@@ -229,53 +233,53 @@ export default {
           ok: "是",
           cancel: "否",
         })
-        .then(() => {
+        .onOk(() => {
           this.$api
             .delete("/api/v1/dish-producer/" + id)
             .then((response) => {
               if (response.data.ok === true) {
-                this.notifySuccess(response.data.message);
+                this.notifySuccess(response.data.message)
               } else {
-                this.notifyFail(response.data.message);
+                this.notifyFail(response.data.message)
               }
-              this.loadKPositions();
+              this.loadKPositions()
             })
             .catch((e) => {
-              this.notifyFail(e.response.data.message);
-            });
+              this.notifyFail(e.response.data.message)
+            })
         })
         .catch((e) => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
     loadKPositions() {
-      var params = {};
-      params.page = this.current_page;
+      var params = {}
+      params.page = this.current_page
       this.$api
         .get("/api/v1/dish-producer", {
           params: params,
         })
         .then((response) => {
-          this.positions = response.data.data;
-          this.current_page = response.data.currentPage;
-          this.page_size = response.data.pageSize;
-          this.total = response.data.total;
+          this.positions = response.data.data
+          this.current_page = response.data.currentPage
+          this.page_size = response.data.pageSize
+          this.total = response.data.total
         })
         .catch((e) => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
     onOk() {
-      console.log("ok");
+      console.log("ok")
     },
     onCancel() {
-      console.log("cancel");
+      console.log("cancel")
     },
     onShow() {
-      console.log("show");
+      console.log("show")
     },
     onHide() {
-      console.log("hide");
+      console.log("hide")
     },
     executeNewPosition() {
       this.$api
@@ -292,9 +296,9 @@ export default {
               message: response.data.message,
               position: "top-right",
               avatar: "statics/huaji.png",
-            });
-            this.customDialogModel = false;
-            this.loadKPositions();
+            })
+            this.customDialogModel = false
+            this.loadKPositions()
           } else {
             this.$q.notify({
               color: "red",
@@ -303,7 +307,7 @@ export default {
               message: response.data.message,
               position: "top-right",
               avatar: "statics/sad.png",
-            });
+            })
           }
         })
         .catch((e) => {
@@ -314,12 +318,12 @@ export default {
             message: "未知错误",
             position: "top-right",
             avatar: "statics/sad.png",
-          });
-        });
+          })
+        })
     },
     newPosition() {
-      this.customDialogModel = true;
+      this.customDialogModel = true
     },
   },
-};
+}
 </script>
