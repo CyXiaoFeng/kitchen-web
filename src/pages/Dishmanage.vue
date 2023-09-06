@@ -15,9 +15,11 @@
       </div>
       <div class="row justify-center">
         <q-select
+          use-input
+          filled
+          use-chips
           multiple
-          chips
-          @input="selectChange"
+          @update:modelValue="selectChange"
           color="purple"
           label="按标签过滤"
           v-model="multi_select_tags"
@@ -123,8 +125,13 @@ export default {
             })
         })
     },
-    selectChange(val) {
-      this.loadDish()
+    selectChange(tags) {
+      const curTags = tags
+        .map((tag) => {
+          return tag.value
+        })
+        .join(",")
+      this.loadDish(curTags)
     },
     loadDishTags() {
       this.$api
@@ -145,12 +152,12 @@ export default {
     },
     reloadPage(val) {
       this.current_page = val
-      this.loadDish()
+      this.loadDish("")
     },
-    loadDish() {
+    loadDish(tags) {
       var params = {}
       params.page = this.current_page
-      params.tags = this.multi_select_tags.join(",")
+      params.tags = tags
       this.$api
         .get("/api/v1/dish", {
           params: params,
