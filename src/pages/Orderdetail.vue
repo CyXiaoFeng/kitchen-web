@@ -391,9 +391,8 @@ export default {
         .then((response) => {
           if (response.data.ok === true) {
             this.notifySuccess(response.data.message)
-            setTimeout(() => {
-              // this.refreshItems()
-            }, 1000)
+            //TODO 旧代码采用setInterval定时刷新，用于更新不断变化的状态
+            this.refreshItems()
           } else {
             this.notifyFail(response.data.message)
           }

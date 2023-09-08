@@ -4,7 +4,7 @@
       <div class="row justify-center">
         <h4>餐桌视图</h4>
       </div>
-      <div class="justify-center" style="margin-left: 10px">
+      <div class="q-pa-md row items-start q-gutter-md">
         <q-card
           style="max-width: 400px; background-color: #77c0c7"
           v-for="table in tables"
@@ -98,6 +98,7 @@ export default {
   mixins: [base],
   mounted() {
     this.loadTables()
+    //TODO 定时刷新桌面视图，用于查看已经完成的菜品
     setInterval(() => {
       // this.loadTables();
       console.log("refresh table view board")

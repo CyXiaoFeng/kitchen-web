@@ -12,7 +12,7 @@
           label="不显示离线"
         />
       </div>
-      <div class="justify-center" style="margin-left: 10px">
+      <div class="row justify-center">
         <q-card
           v-bind:class="{
             'offline-card': kit.status === 'offline',
@@ -51,14 +51,14 @@
             </q-item>
           </q-list>
           <q-item>
-            <q-item-main>
+            <q-item-section>
               <label style="color: red" v-if="kit.status === 'online'">在线</label>
               <label style="color: #d200d2" v-if="kit.status === 'blocking'">阻挡</label>
               <label style="color: gray" v-if="kit.status === 'offline'">离线</label>
-            </q-item-main>
+            </q-item-section>
           </q-item>
         </q-card>
-        <q-inner-loading :visible="loading">
+        <q-inner-loading :showing="loading">
           <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
         </q-inner-loading>
       </div>
@@ -91,7 +91,7 @@
 </style>
 
 <script>
-import base from "../mixins/base";
+import base from "../mixins/base"
 export default {
   name: "ChefAssignment",
   data() {
@@ -104,76 +104,76 @@ export default {
       tables: [],
       customDialogModel: false,
       current_page: 1,
-    };
+    }
   },
   mixins: [base],
   mounted() {
-    this.loadKPositionsWithItems();
+    this.loadKPositionsWithItems()
     setInterval(() => {
-      this.loadKPositionsWithItems();
-    }, 20000);
+      this.loadKPositionsWithItems()
+    }, 20000)
   },
   methods: {
     switchOnline(val) {
-      this.loadKPositionsWithItems();
+      this.loadKPositionsWithItems()
     },
     ready2serve(orderItemId) {
       this.$api
         .put("/api/v1/order-item/finish-cooking/" + orderItemId)
         .then((response) => {
           if (response.data.ok === true) {
-            this.notifySuccess(response.data.message);
+            this.notifySuccess(response.data.message)
           } else {
-            this.notifyFail(response.data.message);
+            this.notifyFail(response.data.message)
           }
-          this.loadKPositionsWithItems();
+          this.loadKPositionsWithItems()
         })
         .catch((e) => {
-          this.notifyFail("未知错误ready2serve");
-        });
+          this.notifyFail("未知错误ready2serve")
+        })
     },
     onOk() {
-      console.log("ok");
+      console.log("ok")
     },
     onCancel() {
-      console.log("cancel");
+      console.log("cancel")
     },
     onShow() {
-      console.log("show");
+      console.log("show")
     },
     onHide() {
-      console.log("hide");
+      console.log("hide")
     },
     reloadPage(val) {
-      this.current_page = val;
-      this.loadTables();
+      this.current_page = val
+      this.loadTables()
     },
     showLoadingOneSec() {
-      this.loading = true;
+      this.loading = true
       setTimeout(() => {
-        this.loading = false;
-      }, 500);
+        this.loading = false
+      }, 500)
     },
     loadKPositionsWithItems() {
-      var params = {};
-      params.page = this.current_page;
-      params.online_only = this.online_only;
+      var params = {}
+      params.page = this.current_page
+      params.online_only = this.online_only
       this.$api
         .get("/api/v1/dish-producer/withitems", {
           params: params,
         })
         .then((response) => {
-          this.showLoadingOneSec();
-          this.positions = response.data.data;
-          this.current_page = response.data.currentPage;
-          this.page_size = response.data.pageSize;
-          this.total = response.data.total;
+          this.showLoadingOneSec()
+          this.positions = response.data.data
+          this.current_page = response.data.currentPage
+          this.page_size = response.data.pageSize
+          this.total = response.data.total
         })
         .catch((e) => {
-          console.log(e.response);
-          this.notifyFail("获取厨位数据失败");
-        });
+          console.log(e.response)
+          this.notifyFail("获取厨位数据失败")
+        })
     },
   },
-};
+}
 </script>
