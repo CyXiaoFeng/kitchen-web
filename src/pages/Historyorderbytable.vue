@@ -7,7 +7,7 @@
       <div class="row justify-center">
         <q-table
           style="max-width: 90vw"
-          :data="orders"
+          :rows="orders"
           :columns="columns"
           row-key="id"
           color="secondary"
@@ -37,26 +37,27 @@
               icon="refresh"
             />
           </template>
-          <q-td slot="body-cell-OrderStatus" slot-scope="props" :props="props">
-            <q-chip v-if="props.value === 'active'" small color="brown-4">进行中</q-chip>
-            <q-chip v-else-if="props.value === 'finished'" small color="green"
-              >已完成</q-chip
-            >
-            <q-chip v-else small color="amber">{{ props.value }}</q-chip>
-          </q-td>
-          <q-td slot="body-cell-OrderNumber" slot-scope="props" :props="props">
-            <a
-              href="javascript:"
-              @click.prevent="goPage('/order-detail/' + props.row.id)"
-              >{{ props.value }}</a
-            >
-          </q-td>
-          <q-td
-            style="min-width: 150px"
-            slot="body-cell-DishCount"
-            slot-scope="props"
-            :props="props"
-          >
+          <template v-slot:body-cell-OrderStatus="props">
+            <q-td>
+              <q-chip v-if="props.value === 'active'" small color="brown-4"
+                >进行中</q-chip
+              >
+              <q-chip v-else-if="props.value === 'finished'" small color="green"
+                >已完成</q-chip
+              >
+              <q-chip v-else small color="amber">{{ props.value }}</q-chip>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-OrderNumber="props">
+            <q-td>
+              <a
+                href="javascript:"
+                @click.prevent="goPage('/order-detail/' + props.row.id)"
+                >{{ props.value }}</a
+              >
+            </q-td>
+          </template>
+          <q-td style="min-width: 150px" :props="props">
             <q-btn
               :disable="props.row.status !== 'unassigned'"
               size="sm"
@@ -79,14 +80,12 @@
             />
             {{ props.value }}
           </q-td>
-          <q-td
-            style="max-width: 300px"
-            slot="body-cell-Description"
-            slot-scope="props"
-            :props="props"
-          >
-            <span>{{ props.value }}</span>
-          </q-td>
+          <template v-slot:body-cell-Description="props">
+            <q-td>
+              style="max-width: 300px" >
+              <span>{{ props.value }}</span>
+            </q-td>
+          </template>
         </q-table>
       </div>
     </div>
@@ -102,7 +101,7 @@
 </style>
 
 <script>
-import base from "../mixins/base";
+import base from "../mixins/base"
 export default {
   name: "HistoryorderdetailByTable",
   data() {
@@ -170,50 +169,50 @@ export default {
       created_by: "",
       order_items: [],
       orders: [],
-    };
+    }
   },
   mixins: [base],
   mounted() {
-    this.table_id = this.$route.params.id;
-    this.loadHistoryOrderByTable();
-    this.loadTableInfo();
+    this.table_id = this.$route.params.id
+    this.loadHistoryOrderByTable()
+    this.loadTableInfo()
   },
   methods: {
     loadHistoryOrderByTable() {
-      var params = {};
-      params.page = this.serverPagination.page;
-      params.pageSize = this.serverPagination.rowsPerPage;
+      var params = {}
+      params.page = this.serverPagination.page
+      params.pageSize = this.serverPagination.rowsPerPage
       this.$api
         .get("/api/v1/order/history-by-table/" + this.table_id, {
           params: params,
         })
         .then((response) => {
-          this.orders = response.data.data;
-          this.serverPagination.page = response.data.currentPage;
-          this.serverPagination.rowsNumber = response.data.total;
-          this.serverPagination.rowsPerPage = response.data.pageSize;
+          this.orders = response.data.data
+          this.serverPagination.page = response.data.currentPage
+          this.serverPagination.rowsNumber = response.data.total
+          this.serverPagination.rowsPerPage = response.data.pageSize
         })
         .catch((e) => {
-          this.notifyFail(e.response.data.message);
-        });
+          this.notifyFail(e.response.data.message)
+        })
     },
     refreshItems() {
-      this.loadHistoryOrderByTable();
+      this.loadHistoryOrderByTable()
     },
     request(props) {
-      this.serverPagination = props.pagination;
-      this.loadHistoryOrderByTable();
+      this.serverPagination = props.pagination
+      this.loadHistoryOrderByTable()
     },
     loadTableInfo() {
       this.$api
         .get("/api/v1/table/" + this.table_id)
         .then((response) => {
-          this.table_no = response.data.table_number;
+          this.table_no = response.data.table_number
         })
         .catch((e) => {
-          this.notifyFail("载入餐桌信息失败");
-        });
+          this.notifyFail("载入餐桌信息失败")
+        })
     },
   },
-};
+}
 </script>

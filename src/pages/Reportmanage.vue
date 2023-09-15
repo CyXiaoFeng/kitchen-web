@@ -4,7 +4,7 @@
       <h4>全部历史订单</h4>
     </div>
     <q-table
-      :data="orders"
+      :rows="orders"
       :columns="columns"
       row-key="id"
       color="secondary"
@@ -22,15 +22,21 @@
           icon="refresh"
         />
       </template>
-      <q-td>
-        <q-chip v-if="props.value === 'finished'" small color="green">已完成</q-chip>
-        <q-chip v-else small color="green">props.value</q-chip>
-      </q-td>
-      <q-td>
-        <a href="javascript:" @click.prevent="goPage('/order-detail/' + props.row.id)">{{
-          props.value
-        }}</a>
-      </q-td>
+      <template v-slot:body-cell-OrderStatus="props">
+        <q-td>
+          <q-chip v-if="props.value === 'finished'" small color="green">已完成</q-chip>
+          <q-chip v-else small color="green">props.value</q-chip>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-OrderNumber="props">
+        <q-td>
+          <a
+            href="javascript:"
+            @click.prevent="goPage('/order-detail/' + props.row.id)"
+            >{{ props.value }}</a
+          >
+        </q-td>
+      </template>
     </q-table>
   </q-page>
 </template>
@@ -38,7 +44,7 @@
 <style></style>
 
 <script>
-import base from "../mixins/base";
+import base from "../mixins/base"
 export default {
   name: "OrderHistory",
   data() {
@@ -93,53 +99,53 @@ export default {
           sortable: false,
         },
       ],
-    };
+    }
   },
   mixins: [base],
   mounted() {
-    this.loadHistoryOrders();
+    this.loadHistoryOrders()
   },
   methods: {
     refreshItems() {
-      this.loadHistoryOrders();
+      this.loadHistoryOrders()
     },
     request(props) {
-      this.serverPagination = props.pagination;
-      this.loadHistoryOrders();
+      this.serverPagination = props.pagination
+      this.loadHistoryOrders()
     },
     loadHistoryOrders() {
-      var params = {};
-      params.page = this.serverPagination.page;
-      params.pageSize = this.serverPagination.rowsPerPage;
-      this.loading = true;
+      var params = {}
+      params.page = this.serverPagination.page
+      params.pageSize = this.serverPagination.rowsPerPage
+      this.loading = true
       this.$api
         .get("/api/v1/order/history", {
           params: params,
         })
         .then((response) => {
-          this.orders = response.data.data;
-          this.serverPagination.page = response.data.currentPage;
-          this.serverPagination.rowsNumber = response.data.total;
-          this.serverPagination.rowsPerPage = response.data.pageSize;
-          this.loading = false;
+          this.orders = response.data.data
+          this.serverPagination.page = response.data.currentPage
+          this.serverPagination.rowsNumber = response.data.total
+          this.serverPagination.rowsPerPage = response.data.pageSize
+          this.loading = false
         })
         .catch((e) => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
     newOrder() {
       this.$api
         .post("/api/v1/order/new")
         .then((response) => {
           if (response.data.ok === true) {
-            this.notifySuccess(response.data.message);
-            this.goPage("/order-detail/" + response.data.data);
+            this.notifySuccess(response.data.message)
+            this.goPage("/order-detail/" + response.data.data)
           }
         })
         .catch((e) => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
   },
-};
+}
 </script>

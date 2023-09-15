@@ -36,13 +36,11 @@
           v-bind:key="dish.id"
           inline
         >
-          <q-card-section>
-            <img
-              :src="dish.thumbnail === null ? 'src/statics/dish.png' : dish.thumbnail"
-              style="cursor: pointer"
-              @click="goPage('/edit-dish/' + dish.id)"
-            />
-          </q-card-section>
+          <img
+            :src="dish.thumbnail === null ? 'src/statics/dish.png' : dish.thumbnail"
+            style="cursor: pointer"
+            @click="goPage('/edit-dish/' + dish.id)"
+          />
           <div>
             <a href="javascript:" @click.prevent="goPage('/edit-dish/' + dish.id)"
               >{{ dish.name }}({{ dish.price }}元)</a
@@ -97,7 +95,7 @@ export default {
     }
   },
   mounted() {
-    this.loadDish()
+    this.loadDish("")
     this.loadDishTags()
   },
   methods: {

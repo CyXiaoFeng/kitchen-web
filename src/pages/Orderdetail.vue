@@ -78,82 +78,96 @@
               />
             </div>
           </template>
-          <q-td style="min-width: 115px" :props="props">
-            <q-chip v-if="props.value === 'unassigned'" small color="brown-4"
-              >未分配</q-chip
-            >
-            <q-chip v-else-if="props.value === 'waiting_assign'" small color="yellow"
-              >待分配</q-chip
-            >
-            <q-chip v-else-if="props.value === 'failed_assign'" small color="red"
-              >分配失败</q-chip
-            >
-            <q-chip v-else-if="props.value === 'assigned'" small color="lime-14"
-              >制作中</q-chip
-            >
-            <q-chip v-else-if="props.value === 'readytoserve'" small color="deep-orange-6"
-              >完成待取</q-chip
-            >
-            <q-chip v-else-if="props.value === 'served'" small color="green"
-              >已上菜</q-chip
-            >
-            <q-chip v-else small color="green">props.value</q-chip>
-          </q-td>
-          <q-td style="min-width: 150px" :props="props">
-            <q-btn
-              :disable="props.row.status !== 'unassigned'"
-              size="sm"
-              round
-              dense
-              color="secondary"
-              icon="remove"
-              @click="updateUnassignedItemCount(props.row.id, props.value - 1)"
-              class="q-mr-xs"
-            />
-            <q-btn
-              :disable="props.row.status !== 'unassigned'"
-              size="sm"
-              round
-              dense
-              color="tertiary"
-              icon="add"
-              @click="updateUnassignedItemCount(props.row.id, props.value + 1)"
-              class="q-mr-sm"
-            />
-            {{ props.value }}
-          </q-td>
-          <q-td style="max-width: 120px" pe="props" :props="props">
-            <q-chip>{{ props.value }}￥</q-chip>
-          </q-td>
-          <q-td style="max-width: 300px" ope="props" :props="props">
-            <q-btn
-              v-if="props.row.status !== 'served'"
-              @click="openEditDescriptionDialog(props.row.id, props.value)"
-              size="sm"
-              class="q-mr-sm"
-              icon="mode edit"
-              dense
-            ></q-btn>
-            <span>{{ props.value }}</span>
-          </q-td>
-          <q-td style="max-width: 150px" :props="props">
-            <q-btn
-              v-if="props.row.status === 'readytoserve'"
-              @click="served(props.row.id)"
-              icon="speaker_notes_off"
-              dense
-              glossy
-              color="purple-13"
-              label="划菜"
-            />
-          </q-td>
-          <q-td style="width: 100px; max-width: 200px" :props="props">
-            <a
-              @click.prevent="goPage('/order-detail-by-table/' + props.row.table_id)"
-              href="javascript:"
-              >{{ props.value }}</a
-            >
-          </q-td>
+          <template v-slot:body-cell-Status="props">
+            <q-td style="min-width: 115px" :props="props">
+              <q-chip v-if="props.value === 'unassigned'" small color="brown-4"
+                >未分配</q-chip
+              >
+              <q-chip v-else-if="props.value === 'waiting_assign'" small color="yellow"
+                >待分配</q-chip
+              >
+              <q-chip v-else-if="props.value === 'failed_assign'" small color="red"
+                >分配失败</q-chip
+              >
+              <q-chip v-else-if="props.value === 'assigned'" small color="lime-14"
+                >制作中</q-chip
+              >
+              <q-chip
+                v-else-if="props.value === 'readytoserve'"
+                small
+                color="deep-orange-6"
+                >完成待取</q-chip
+              >
+              <q-chip v-else-if="props.value === 'served'" small color="green"
+                >已上菜</q-chip
+              >
+              <q-chip v-else small color="green">props.value</q-chip>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-DishCount="props">
+            <q-td style="min-width: 150px" :props="props">
+              <q-btn
+                :disable="props.row.status !== 'unassigned'"
+                size="sm"
+                round
+                dense
+                color="secondary"
+                icon="remove"
+                @click="updateUnassignedItemCount(props.row.id, props.value - 1)"
+                class="q-mr-xs"
+              />
+              <q-btn
+                :disable="props.row.status !== 'unassigned'"
+                size="sm"
+                round
+                dense
+                color="secondary"
+                icon="add"
+                @click="updateUnassignedItemCount(props.row.id, props.value + 1)"
+                class="q-mr-sm"
+              />
+              {{ props.value }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-Price="props">
+            <q-td style="max-width: 120px" key="Price" :props="props">
+              <q-chip>{{ props.value }}￥</q-chip>
+            </q-td>
+          </template>
+          <template v-slot:body-cell-Description="props">
+            <q-td style="max-width: 300px" :props="props">
+              <q-btn
+                v-if="props.row.status !== 'served'"
+                @click="openEditDescriptionDialog(props.row.id, props.value)"
+                size="sm"
+                class="q-mr-sm"
+                icon="mode_edit"
+                dense
+              />{{ props.value }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-Action="props">
+            <q-td style="max-width: 150px" :props="props">
+              <q-btn
+                v-if="props.row.status === 'readytoserve'"
+                @click="served(props.row.id)"
+                icon="speaker_notes_off"
+                dense
+                glossy
+                color="purple-13"
+                label="划菜"
+              />
+            </q-td>
+          </template>
+          <template v-slot:body-cell-TableNumber="props">
+            <q-td style="width: 100px; max-width: 200px" :props="props">
+              <a
+                @click.prevent="goPage('/order-detail-by-table/' + props.row.table_id)"
+                href="javascript:"
+                >{{ props.value }}</a
+              >
+            </q-td>
+          </template>
         </q-table>
       </div>
     </div>
@@ -248,13 +262,6 @@ export default {
           field: "last_update_time",
           sortable: false,
         },
-        // ,
-        // {
-        //   name: 'Operations',
-        //   required: true,
-        //   label: '操作',
-        //   align: 'left'
-        // }
       ],
       total: 0,
       order_status: "",
@@ -339,7 +346,7 @@ export default {
           cancel: true,
           color: "secondary",
         })
-        .then((data) => {
+        .onOk((data) => {
           this.updateItemDescription(itemId, data)
         })
         .catch(() => {

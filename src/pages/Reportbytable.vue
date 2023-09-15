@@ -7,7 +7,7 @@
       <div class="row justify-center">
         <q-card v-for="table in tables" v-bind:key="table.id" inline class="q-ma-sm">
           <q-card-section>
-            <img src="statics/table.png" />
+            <img src="src/statics/table.png" />
             {{ table.table_number }}
             <span>{{ table.description }}</span>
           </q-card-section>
@@ -36,7 +36,7 @@
 <style></style>
 
 <script>
-import base from "../mixins/base";
+import base from "../mixins/base"
 export default {
   name: "ReportByTable",
   mixins: [base],
@@ -51,48 +51,48 @@ export default {
       editTableDialog: false,
       current_page: 1,
       edit_table_id: "",
-    };
+    }
   },
   mounted() {
-    this.loadTables();
+    this.loadTables()
   },
   methods: {
     checkHistoryReportByTable(tableId) {
-      this.goPage("/history-order-by-table/" + tableId);
+      this.goPage("/history-order-by-table/" + tableId)
     },
     onOk() {
-      console.log("ok");
+      console.log("ok")
     },
     onCancel() {
-      console.log("cancel");
+      console.log("cancel")
     },
     onShow() {
-      console.log("show");
+      console.log("show")
     },
     onHide() {
-      console.log("hide");
+      console.log("hide")
     },
     reloadPage(val) {
-      this.current_page = val;
-      this.loadTables();
+      this.current_page = val
+      this.loadTables()
     },
     loadTables() {
-      var params = {};
-      params.page = this.current_page;
+      var params = {}
+      params.page = this.current_page
       this.$api
         .get("/api/v1/table", {
           params: params,
         })
         .then((response) => {
-          this.tables = response.data.data;
-          this.current_page = response.data.currentPage;
-          this.page_size = response.data.pageSize;
-          this.total = response.data.total;
+          this.tables = response.data.data
+          this.current_page = response.data.currentPage
+          this.page_size = response.data.pageSize
+          this.total = response.data.total
         })
         .catch((e) => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
   },
-};
+}
 </script>

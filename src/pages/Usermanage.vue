@@ -9,7 +9,7 @@
           glossy
           text-color="black"
           label="所有"
-          icon="verified_user"
+          icon="done_all"
         />
         <q-btn
           color="blue"
@@ -35,55 +35,56 @@
       </q-btn-group>
     </div>
     <div class="row justify-center">
-      <q-search
+      <q-input
         v-model="search_name"
         :debounce="600"
         placeholder="搜用户"
-        icon="search"
         float-label="搜用户"
-      />
+      >
+        <template v-slot:prepend>
+          <q-icon name="search" />
+        </template>
+      </q-input>
     </div>
     <div class="row justify-center" style="margin-top: 20px">
       <q-list highlight inset-separator style="width: 300px">
         <q-item v-for="item in user_items" v-bind:key="item.user_id">
-          <q-item-side v-if="item.role_name === '服务员'" avatar="statics/waiter.png" />
-          <q-item-side v-if="item.role_name === '厨师'" avatar="statics/cook.png" />
-          <q-item-side v-if="item.role_name === '管理员'" avatar="statics/admin.png" />
-          <q-item-main style="min-width: 120px" :label="item.username">
-            <q-item-tile sublabel>{{ item.role_name }}</q-item-tile>
-          </q-item-main>
-          <!-- <q-item-side right v-if="item.username!=='admin'">
-               <q-btn icon="person_pin" dense label="角色" @click="assignRole(item.user_id, item.role_id)" />
-               <q-btn icon="settings_backup_restore" dense label="重置密码" @click="passwordReset(item.user_id)" />
-               <q-btn icon="delete" label="删除" dense @click="deleteUser(item.user_id, item.username)"/>
-             </q-item-side> -->
-          <q-item-side right v-if="item.username !== 'admin'">
-            <q-btn flat round dense icon="more_vert">
-              <q-popover>
+          <q-item-section top avatar>
+            <q-avatar>
+              <img v-if="roleImages[item.role_name]" :src="roleImages[item.role_name]" />
+            </q-avatar>
+          </q-item-section>
+          <q-item-section style="min-width: 120px" :label="item.username">
+            <q-item-tile sublabel>{{ item.username }}</q-item-tile>
+          </q-item-section>
+          <q-item-section right v-if="item.username !== 'admin'">
+            <q-btn flat dense icon="more_vert">
+              <q-menu>
                 <q-list link>
                   <q-item v-close-overlay>
                     <q-item-section
                       label="角色"
                       @click="assignRole(item.user_id, item.role_id)"
-                    />
+                      >角色</q-item-section
+                    >
                   </q-item>
                   <q-item v-close-overlay>
-                    <q-item-section
-                      label="重置密码"
-                      @click="passwordReset(item.user_id)"
-                    />
+                    <q-item-section label="重置密码" @click="passwordReset(item.user_id)"
+                      >重置密码</q-item-section
+                    >
                   </q-item>
                   <q-item v-close-overlay>
                     <q-item-section
                       icon="delete"
                       label="删除"
                       @click="deleteUser(item.user_id, item.username)"
-                    />
+                      >删除</q-item-section
+                    >
                   </q-item>
                 </q-list>
-              </q-popover>
+              </q-menu>
             </q-btn>
-          </q-item-side>
+          </q-item-section>
         </q-item>
       </q-list>
     </div>
@@ -118,7 +119,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn color="primary" label="创建" @click="executeNewUser(props.ok)" />
+          <q-btn color="primary" label="创建" @click="executeNewUser()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -128,7 +129,7 @@
 <style></style>
 
 <script>
-import base from "../mixins/base";
+import base from "../mixins/base"
 export default {
   name: "UserManage",
   mixins: [base],
@@ -145,11 +146,16 @@ export default {
       user_items: [],
       filter_role_name: "",
       pickRole: "",
-    };
+      roleImages: {
+        服务员: "src/statics/waiter.png",
+        厨师: "src/statics/cook.png",
+        管理员: "src/statics/admin.png",
+      },
+    }
   },
   watch: {
     search_name(val) {
-      this.loadUsers();
+      this.loadUsers()
     },
   },
   methods: {
@@ -161,15 +167,15 @@ export default {
         })
         .then((response) => {
           if (response.data.ok === true) {
-            this.notifySuccess(response.data.message);
+            this.notifySuccess(response.data.message)
           } else {
-            this.notifyFail(response.data.message);
+            this.notifyFail(response.data.message)
           }
-          this.loadUsers();
+          this.loadUsers()
         })
         .catch((e) => {
-          this.notifyFail(e.response.data);
-        });
+          this.notifyFail(e.response.data)
+        })
     },
     assignRole(uid, roleId) {
       this.$q
@@ -185,7 +191,7 @@ export default {
           color: "secondary",
         })
         .then((data) => {
-          console.log(data);
+          console.log(data)
           if (data == null || data.length < 1) {
             this.$q.notify({
               color: "orange",
@@ -194,28 +200,28 @@ export default {
               message: "您需要先选中一个角色哦",
               position: "top-right",
               avatar: "statics/sad.png",
-            });
+            })
           } else {
-            this.executeAssignRole(uid, data);
+            this.executeAssignRole(uid, data)
           }
         })
         .catch((e) => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
     passwordReset(userId) {
       this.$api
         .put("/api/v1/user/password-reset/" + userId)
         .then((response) => {
           if (response.data.ok === true) {
-            this.notifySuccess(response.data.message);
+            this.notifySuccess(response.data.message)
           } else {
-            this.notifyFail(response.data.message);
+            this.notifyFail(response.data.message)
           }
         })
         .catch((e) => {
-          this.notifyFail(e.response.data.message);
-        });
+          this.notifyFail(e.response.data.message)
+        })
     },
     deleteUser(userId, username) {
       this.$q
@@ -225,54 +231,54 @@ export default {
           ok: "是",
           cancel: "否",
         })
-        .then(() => {
-          this.executeDeleteUser(userId);
+        .onOk(() => {
+          this.executeDeleteUser(userId)
         })
         .catch(() => {
           // do nothing
-        });
+        })
     },
     executeDeleteUser(userId) {
       this.$api
         .delete("/api/v1/user/" + userId)
         .then((response) => {
           if (response.data.ok === true) {
-            this.notifySuccess(response.data.message);
+            this.notifySuccess(response.data.message)
           } else {
-            this.notifyFail(response.data.message);
+            this.notifyFail(response.data.message)
           }
-          this.loadUsers();
+          this.loadUsers()
         })
         .catch((e) => {
-          this.notifyFail(e.response.data.message);
-        });
+          this.notifyFail(e.response.data.message)
+        })
     },
     filterRole(val) {
-      this.filter_role_name = val;
-      this.loadUsers();
+      this.filter_role_name = val
+      this.loadUsers()
     },
     reloadPage(val) {
-      this.current_page = val;
-      this.loadUsers();
+      this.current_page = val
+      this.loadUsers()
     },
     loadUsers() {
-      var params = {};
-      params.page = this.current_page;
-      params.filterRoleName = this.filter_role_name;
-      params.searchName = this.search_name;
+      var params = {}
+      params.page = this.current_page
+      params.filterRoleName = this.filter_role_name
+      params.searchName = this.search_name
       this.$api
         .get("/api/v1/user", {
           params: params,
         })
         .then((response) => {
-          this.user_items = response.data.data;
-          this.total = response.data.total;
-          this.page_size = response.data.pageSize;
-          this.current_page = response.data.currentPage;
+          this.user_items = response.data.data
+          this.total = response.data.total
+          this.page_size = response.data.pageSize
+          this.current_page = response.data.currentPage
         })
         .catch((e) => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     },
     executeNewUser(val) {
       if (
@@ -288,13 +294,13 @@ export default {
           message: "用户名和角色不能为空",
           position: "top-right",
           avatar: "statics/sad.png",
-        });
-        return;
+        })
+        return
       }
       this.$api
         .post("/api/v1/user/new", {
           username: this.username,
-          role_id: this.role_id,
+          role_id: this.role_id.value,
         })
         .then((response) => {
           if (response.data.ok === true) {
@@ -305,8 +311,8 @@ export default {
               message: response.data.message,
               position: "top-right",
               avatar: "statics/huaji.png",
-            });
-            this.loadUsers();
+            })
+            this.loadUsers()
           } else {
             this.$q.notify({
               color: "red",
@@ -315,11 +321,11 @@ export default {
               message: response.data.message,
               position: "top-right",
               avatar: "statics/sad.png",
-            });
+            })
           }
-          this.customDialogModel = false;
-          this.role_id = "";
-          this.username = "";
+          this.customDialogModel = false
+          this.role_id = ""
+          this.username = ""
         })
         .catch((e) => {
           this.$q.notify({
@@ -329,45 +335,45 @@ export default {
             message: "未知错误",
             position: "top-right",
             avatar: "statics/sad.png",
-          });
-        });
+          })
+        })
     },
     onOk() {
-      console.log("ok");
+      console.log("ok")
     },
     onCancel() {
-      console.log("cancel");
+      console.log("cancel")
     },
     onShow() {
-      console.log("show");
+      console.log("show")
     },
     onHide() {
-      console.log("hide");
+      console.log("hide")
     },
     newUser() {
-      this.loadRoles();
-      this.customDialogModel = true;
+      this.loadRoles()
+      this.customDialogModel = true
     },
     loadRoles() {
       this.$api
         .get("/api/v1/role")
         .then((response) => {
-          this.role_list = [];
+          this.role_list = []
           for (var i in response.data) {
-            var item = {};
-            item.label = response.data[i]["role_name"];
-            item.value = response.data[i]["id"];
-            this.role_list.push(item);
+            var item = {}
+            item.label = response.data[i]["role_name"]
+            item.value = response.data[i]["id"]
+            this.role_list.push(item)
           }
         })
         .catch((e) => {
-          console.info(e);
-        });
+          console.info(e)
+        })
     },
   },
   mounted() {
-    this.loadUsers();
-    this.loadRoles();
+    this.loadUsers()
+    this.loadRoles()
   },
-};
+}
 </script>
