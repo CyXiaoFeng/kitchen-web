@@ -14,24 +14,24 @@
         />
 
         <q-toolbar-title>
-          <a @click="goPage('/')" style="cursor: pointer">小厨</a>
-          <div>厨房点菜一体化系统</div>
+          <a @click="goPage('/')" style="cursor: pointer">{{ $t("kitchen") }}</a>
+          <div>{{ $t("kitchenOrderingSystem") }}</div>
         </q-toolbar-title>
         <q-btn-dropdown flat :label="user">
           <q-list link>
             <q-item v-if="loggedIn" clickable @click="goPage('/change-pass')">
-              <q-item-section> 修改密码 </q-item-section>
+              <q-item-section>{{ $t("changePassword") }}</q-item-section>
               <q-item-section side right icon="info" color="amber" />
             </q-item>
 
             <q-item v-if="loggedIn" clickable @click="logout">
-              <q-item-section> 登出 </q-item-section>
+              <q-item-section>{{ $t("logout") }}</q-item-section>
               <q-item-section avatar>
                 <q-icon side right name="info" />
               </q-item-section>
             </q-item>
             <q-item v-if="!loggedIn" clickable @click="goPage('/login')">
-              <q-item-section> 登录 </q-item-section>
+              <q-item-section>{{ $t("login") }}</q-item-section>
               <q-item-section avatar>
                 <q-icon side right name="info" />
               </q-item-section>
@@ -46,7 +46,7 @@
       :content-class="$q.theme === 'mat' ? 'bg-grey-2' : null"
     >
       <q-list no-border link inset-delimiter>
-        <q-item-label header>功能菜单</q-item-label>
+        <q-item-label header>{{ $t("functionMenu") }}</q-item-label>
         <q-item
           clickable
           v-ripple
@@ -56,7 +56,7 @@
           <q-item-section avatar>
             <q-icon name="fastfood" />
           </q-item-section>
-          <q-item-section>菜品管理</q-item-section>
+          <q-item-section>{{ $t("dishManagement") }}</q-item-section>
         </q-item>
         <q-item
           clickable
@@ -67,7 +67,7 @@
           <q-item-section avatar>
             <q-icon name="table_chart" />
           </q-item-section>
-          <q-item-section>餐桌管理</q-item-section>
+          <q-item-section>{{ $t("tableManagement") }}</q-item-section>
         </q-item>
         <q-item
           clickable
@@ -78,13 +78,13 @@
           <q-item-section avatar>
             <q-icon name="smoking_rooms" />
           </q-item-section>
-          <q-item-section>厨房管理</q-item-section>
+          <q-item-section>{{ $t("kitchenManagement") }}</q-item-section>
         </q-item>
         <q-expansion-item
           v-if="my_role === '服务员' || my_role === '管理员'"
           indent
           icon="recent_actors"
-          label="服务员视图"
+          :label="$t('waiterView')"
           default-opened
         >
           <q-item
@@ -96,7 +96,7 @@
             <q-item-section avatar>
               <q-icon name="menu" />
             </q-item-section>
-            <q-item-section>进行中订单</q-item-section>
+            <q-item-section>{{ $t("ongoingOrders") }}</q-item-section>
           </q-item>
           <q-item
             clickable
@@ -107,14 +107,14 @@
             <q-item-section avatar>
               <q-icon name="crop_din" />
             </q-item-section>
-            <q-item-section>餐桌视图</q-item-section>
+            <q-item-section>{{ $t("tableView") }}</q-item-section>
           </q-item>
         </q-expansion-item>
         <q-expansion-item
           v-if="my_role === '厨师' || my_role === '管理员'"
           indent
           icon="assignment_ind"
-          label="厨师视图"
+          :label="$t('chefView')"
           default-opened
         >
           <q-item
@@ -126,14 +126,14 @@
             <q-item-section avatar>
               <q-icon name="assignment" />
             </q-item-section>
-            <q-item-section>点菜分配视图</q-item-section>
+            <q-item-section>{{ $t("orderAssignmentView") }}</q-item-section>
           </q-item>
         </q-expansion-item>
         <q-expansion-item
           v-if="my_role === '管理员'"
           indent
           icon="recent_actors"
-          label="报表管理"
+          :label="$t('reportManagement')"
           default-opened
         >
           <q-item
@@ -145,7 +145,7 @@
             <q-item-section avatar>
               <q-icon name="wallpaper" />
             </q-item-section>
-            <q-item-section>全部历史订单</q-item-section>
+            <q-item-section>{{ $t("allHistoricalOrders") }}</q-item-section>
           </q-item>
           <q-item
             clickable
@@ -156,7 +156,9 @@
             <q-item-section avatar>
               <q-icon name="tablet" />
             </q-item-section>
-            <q-item-section>历史订单(餐桌)</q-item-section>
+            <q-item-section
+              >{{ $t("historicalOrders") }}({{ $t("table") }})</q-item-section
+            >
           </q-item>
         </q-expansion-item>
 
@@ -169,7 +171,7 @@
           <q-item-section avatar>
             <q-icon name="people" />
           </q-item-section>
-          <q-item-section>用户管理</q-item-section>
+          <q-item-section>{{ $t("userManagement") }}</q-item-section>
         </q-item>
       </q-list>
     </q-drawer>
@@ -188,7 +190,7 @@ export default {
   interval: null,
   data() {
     return {
-      user: "用户",
+      user: this.$t("user"),
       my_role: "",
       loggedIn: false,
       leftDrawerOpen: true,

@@ -126,7 +126,7 @@ export default {
         {
           name: "CreatedBy",
           required: true,
-          label: "创建人",
+          label: this.$t("creator"),
           align: "left",
           field: "created_by",
           sortable: false,
@@ -134,7 +134,7 @@ export default {
         {
           name: "OrderStatus",
           required: true,
-          label: "订单状态",
+          label: this.$t("orderStatus"),
           align: "left",
           field: "order_status",
           sortable: false,

@@ -1,9 +1,14 @@
 <template>
   <q-page class="flex flex-center">
     <div style="width: 500px; max-width: 90vw">
-      <q-input v-model="username" label="用户名" @keyup.enter="login" />
-      <q-input v-model="password" type="password" label="密码" @keyup.enter="login" />
-      <q-btn @click="login" color="primary" class="full-width" label="登录" />
+      <q-input v-model="username" :label="$t('username')" @keyup.enter="login" />
+      <q-input
+        v-model="password"
+        type="password"
+        :label="$t('password')"
+        @keyup.enter="login"
+      />
+      <q-btn @click="login" color="primary" class="full-width" :label="$t('login')" />
     </div>
   </q-page>
 </template>
@@ -41,7 +46,7 @@ export default {
             color: "red",
             textColor: "white",
             icon: "thumb_up",
-            message: "用户名或密码不对",
+            message: this.$t("incorrectUsernameOrPassword"),
             position: "top-right",
             avatar: "statics/sad.png",
           })
