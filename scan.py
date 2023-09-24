@@ -55,11 +55,10 @@ def process_file(file_path, keywords, replacements):
     with open(file_path, 'r', encoding='utf-8') as file:
         lines = file.readlines()
 
-    modified_lines = []
     for i, line in enumerate(lines):
         # line = line.replace(" ","")
         for keyword, replacement in zip(keywords, replacements):
-            if keyword in line and '@' not in line:
+            if keyword in line:
                 # line = line.replace(keywords[i], replacements[i])
                 print(f"old line=>{line}")
                 # pattern = rf':\s*".+"'
@@ -80,7 +79,7 @@ def process_file(file_path, keywords, replacements):
                 match = re.search (regex_pattern, line)
                 if match:
                     # replacement = re.sub(regex_pattern, r':\1='+ f'"$t(\'{replacement}\')"', match.group(0))
-                    lines[i] = re.sub(regex_pattern, f'>$t("{replacement}")<', line)
+                    lines[i] = re.sub(regex_pattern, f'>{{{{$t("{replacement}")}}}}<', line)
                     print("replace three=>"+ lines[i])
         # modified_lines.append(line)
 
