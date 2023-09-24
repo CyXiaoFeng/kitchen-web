@@ -2,14 +2,14 @@
   <q-page style="margin-top: 10px" class="row justify-center">
     <div style="max-width: 90vw">
       <div class="row justify-center">
-        <h4>餐桌管理</h4>
+        <h4>{{ $t("tableManagement") }}</h4>
       </div>
       <div class="row justify-center">
         <q-btn
           @click="newTable"
           color="blue"
-          label="新建餐桌"
-          title="新建餐桌"
+          :label="$t('createNewTable')"
+          :title="$t('createNewTable')"
           icon="playlist_add"
         />
       </div>
@@ -21,8 +21,8 @@
             <span>{{ table.description }}</span>
           </q-card-section>
           <q-card-actions>
-            <q-btn @click="deleteTable(table.id)" flat>删除</q-btn>
-            <q-btn @click="editTable(table.id)" flat>编辑</q-btn>
+            <q-btn @click="deleteTable(table.id)" flat>{{ $t("delete") }}</q-btn>
+            <q-btn @click="editTable(table.id)" flat>{{ $t("edit") }}</q-btn>
           </q-card-actions>
         </q-card>
       </div>
@@ -42,19 +42,28 @@
       <!-- 这里可能使用<q-dialog>的"title"属性 -->
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>
-          <div class="text-h6">新建餐桌</div>
+          <div class="text-h6">{{ $t("createNewTable") }}</div>
         </q-card-section>
         <q-card-section>
-          <q-field icon="settings_input_composite" label="桌号(必填)" :label-width="5">
+          <q-field
+            icon="settings_input_composite"
+            :label="`${$t('table')}(${$t('required')}})`"
+            :label-width="5"
+          >
             <q-input v-model="k_table_no" />
           </q-field>
-          <q-field icon="description" label="描述" :label-width="4">
+          <q-field icon="description" :label="$t('description')" :label-width="4">
             <q-input v-model="k_description" />
           </q-field>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn color="primary" label="创建" @click="executeNewTable()" v-close-popup />
+          <q-btn
+            color="primary"
+            :label="$t('create')"
+            @click="executeNewTable()"
+            v-close-popup
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -67,18 +76,26 @@
       @hide="onHide"
     >
       <!-- 这里可能使用<q-dialog>的"title"属性 -->
-      <span class="text-h6">编辑餐桌</span>
+      <span class="text-h6">{{ $t("editTable") }}</span>
       <div>
-        <q-field icon="settings_input_composite" label="桌号(必填)" :label-width="5">
+        <q-field
+          icon="settings_input_composite"
+          :label="`${$t('table')}(${$t('required')}})`"
+          :label-width="5"
+        >
           <q-input v-model="k_table_no" />
         </q-field>
-        <q-field icon="description" label="描述" :label-width="4">
+        <q-field icon="description" :label="$t('description')" :label-width="4">
           <q-input v-model="k_description" />
         </q-field>
       </div>
 
       <template v-slot:buttons="props">
-        <q-btn color="primary" label="更新" @click="executeEditTable(props.ok)" />
+        <q-btn
+          color="primary"
+          :label="$t('update')"
+          @click="executeEditTable(props.ok)"
+        />
       </template>
     </q-dialog>
   </q-page>
@@ -127,10 +144,10 @@ export default {
     deleteTable(id) {
       this.$q
         .dialog({
-          title: "确认",
-          message: "确认删除该餐桌吗？",
-          ok: "是",
-          cancel: "否",
+          title: this.$t("confirm"),
+          message: `${this.$t("confirmDeleteTable")}?`,
+          ok: this.$t("yes"),
+          cancel: this.$t("no"),
         })
         .then(() => {
           this.$api
@@ -189,7 +206,7 @@ export default {
     },
     executeEditTable() {
       if (this.checkStringNull(this.k_table_no)) {
-        this.notifyWarn("桌号不能为空")
+        this.notifyWarn(this.$t("tableNumberRequired"))
         return
       }
       this.$api
@@ -244,7 +261,7 @@ export default {
             color: "red",
             textColor: "white",
             icon: "thumb_up",
-            message: "未知错误",
+            message: this.$t("unknownError"),
             position: "top-right",
             avatar: "statics/sad.png",
           })

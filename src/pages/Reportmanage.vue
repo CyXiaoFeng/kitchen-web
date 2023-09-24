@@ -1,7 +1,7 @@
 <template>
   <q-page style="margin-top: 10px" padding class="docs-table">
     <div class="row justify-center">
-      <h4>全部历史订单</h4>
+      <h4>{{ $t("allHistoricalOrders") }}</h4>
     </div>
     <q-table
       :rows="orders"
@@ -15,7 +15,7 @@
       <template v-slot:top-right="props">
         <q-btn
           v-if="props != null"
-          title="刷新订单"
+          :title="$t('refreshOrder')"
           round
           color="blue"
           @click="refreshItems"
@@ -24,7 +24,9 @@
       </template>
       <template v-slot:body-cell-OrderStatus="props">
         <q-td>
-          <q-chip v-if="props.value === 'finished'" small color="green">已完成</q-chip>
+          <q-chip v-if="props.value === 'finished'" small color="green">{{
+            $t("completed")
+          }}</q-chip>
           <q-chip v-else small color="green">props.value</q-chip>
         </q-td>
       </template>
@@ -61,7 +63,7 @@ export default {
         {
           name: "OrderNumber",
           required: true,
-          label: "订单号",
+          label: this.$t("orderNumber"),
           align: "left",
           field: "order_number",
           sortable: false,
@@ -85,7 +87,7 @@ export default {
         {
           name: "StartTime",
           required: true,
-          label: "创建时间",
+          label: this.$t("creationTime"),
           align: "left",
           field: "start_time",
           sortable: false,
@@ -93,7 +95,7 @@ export default {
         {
           name: "EndTime",
           required: true,
-          label: "完成时间",
+          label: this.$t("completionTime"),
           align: "left",
           field: "end_time",
           sortable: false,

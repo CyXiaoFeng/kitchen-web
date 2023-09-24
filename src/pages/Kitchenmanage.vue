@@ -2,14 +2,14 @@
   <q-page style="margin-top: 10px" class="row justify-center">
     <div style="width: 700px; max-width: 90vw">
       <div class="row justify-center">
-        <h4>厨房管理</h4>
+        <h4>{{ $t("kitchenManagement") }}</h4>
       </div>
       <div class="row justify-center">
         <q-btn
           @click="newPosition"
           color="blue"
-          title="新建厨位"
-          label="新建厨位"
+          :title="$t('createNewKitchenStation')"
+          :label="$t('createNewKitchenStation')"
           icon="playlist_add"
         />
       </div>
@@ -33,8 +33,8 @@
             </q-card-section>
           </q-card>
           <q-card-actions>
-            <q-btn @click="deletePosition(position.id)" flat>删除</q-btn>
-            <q-btn @click="editPosition(position.id)" flat>编辑</q-btn>
+            <q-btn @click="deletePosition(position.id)" flat>{{ $t("delete") }}</q-btn>
+            <q-btn @click="editPosition(position.id)" flat>{{ $t("edit") }}</q-btn>
           </q-card-actions>
           <q-item>
             <q-item-section>
@@ -49,9 +49,9 @@
                 glossy
                 toggle-color="primary"
                 :options="[
-                  { label: '上线', value: 'online' },
-                  { label: '阻挡', value: 'blocking' },
-                  { label: '离线', value: 'offline' },
+                  { label: $t('online'), value: 'online' },
+                  { label: $t('blocked'), value: 'blocking' },
+                  { label: $t('offline'), value: 'offline' },
                 ]"
               />
             </q-item-section>
@@ -80,18 +80,18 @@
       <!-- 这里可能使用<q-dialog>的"title"属性 -->
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>
-          <div class="text-h6">新建厨位</div>
+          <div class="text-h6">{{ $t("createNewKitchenStation") }}</div>
         </q-card-section>
         <q-card-section>
           <div>
             <q-field
               icon="settings_input_composite"
-              label="厨位号(必填)"
+              :label="`${$t('kitchenStationNumber')}(${$t('required')})`"
               :label-width="5"
             >
               <q-input v-model="k_position_no" />
             </q-field>
-            <q-field icon="description" label="描述" :label-width="4">
+            <q-field icon="description" :label="$t('description')" :label-width="4">
               <q-input v-model="k_description" />
             </q-field>
           </div>
@@ -99,7 +99,7 @@
         <q-card-actions align="right">
           <q-btn
             color="primary"
-            label="创建"
+            :label="$t('create')"
             @click="executeNewPosition()"
             v-close-popup
           />
@@ -115,17 +115,21 @@
       @hide="onHide"
     >
       <!-- 这里可能使用<q-dialog>的"title"属性 -->
-      <span>编辑厨位</span>
+      <span>{{ $t("editKitchenStation") }}</span>
       <div>
-        <q-field icon="settings_input_composite" label="桌号(必填)" :label-width="5">
+        <q-field
+          icon="settings_input_composite"
+          :label="`${$t('tableNumber')}}(${$t('required')}})`"
+          :label-width="5"
+        >
           <q-input v-model="k_dish_producer_no" />
         </q-field>
-        <q-field icon="description" label="描述" :label-width="4">
+        <q-field icon="description" :label="$t('description')" :label-width="4">
           <q-input v-model="k_dish_producer_description" />
         </q-field>
       </div>
       <q-card-actions>
-        <q-btn color="primary" label="更新" @click="executeEditDishProducer()" />
+        <q-btn color="primary" :label="$t('update')" @click="executeEditDishProducer()" />
       </q-card-actions>
     </q-dialog>
   </q-page>
@@ -192,7 +196,7 @@ export default {
     },
     executeEditDishProducer() {
       if (this.checkStringNull(this.k_dish_producer_no)) {
-        this.notifyWarn("厨位号不能为空")
+        this.notifyWarn(this.$t("kitchenStationNumberRequired"))
         return
       }
       this.$api
@@ -229,9 +233,9 @@ export default {
     deletePosition(id) {
       this.$q
         .dialog({
-          title: "删除确认",
-          ok: "是",
-          cancel: "否",
+          title: this.$t("deleteConfirmation"),
+          ok: this.$t("yes"),
+          cancel: this.$t("no"),
         })
         .onOk(() => {
           this.$api
@@ -315,7 +319,7 @@ export default {
             color: "red",
             textColor: "white",
             icon: "thumb_up",
-            message: "未知错误",
+            message: this.$t("unknownError"),
             position: "top-right",
             avatar: "statics/sad.png",
           })

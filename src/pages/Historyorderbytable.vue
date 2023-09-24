@@ -2,7 +2,7 @@
   <q-page style="margin-top: 10px" class="row justify-center">
     <div style="max-width: 90vw; margin-top: 10px">
       <div class="row justify-center">
-        <h4>桌号:{{ table_no }} 的历史订单</h4>
+        <h4>{{ $t("tableNumber") }}:{{ table_no }} {{ $t("historicalOrdersOf") }}</h4>
       </div>
       <div class="row justify-center">
         <q-table
@@ -16,12 +16,12 @@
           :loading="loading"
         >
           <!-- <template slot="top-right">
-          <q-btn title="刷新列表" round color="secondary" @click="refreshItems" style="margin-top:15px;margin-left:10px;" icon="refresh" />
+          <q-btn :title="$t('refreshList')" round color="secondary" @click="refreshItems" style="margin-top:15px;margin-left:10px;" icon="refresh" />
         </template> -->
           <template v-slot:top-left="props">
             <q-btn
               v-if="props != null"
-              label="返回"
+              :label="$t('back')"
               color="purple-7"
               icon="keyboard_backspace"
               @click="goPage('/report-by-table')"
@@ -30,7 +30,7 @@
           <template v-slot:top-right="props">
             <q-btn
               v-if="props != null"
-              title="刷新列表"
+              :title="$t('refreshList')"
               round
               color="blue"
               @click="refreshItems"
@@ -39,12 +39,12 @@
           </template>
           <template v-slot:body-cell-OrderStatus="props">
             <q-td>
-              <q-chip v-if="props.value === 'active'" small color="brown-4"
-                >进行中</q-chip
-              >
-              <q-chip v-else-if="props.value === 'finished'" small color="green"
-                >已完成</q-chip
-              >
+              <q-chip v-if="props.value === 'active'" small color="brown-4">{{
+                $t("ongoing")
+              }}</q-chip>
+              <q-chip v-else-if="props.value === 'finished'" small color="green">{{
+                $t("completed")
+              }}</q-chip>
               <q-chip v-else small color="amber">{{ props.value }}</q-chip>
             </q-td>
           </template>
@@ -118,7 +118,7 @@ export default {
         {
           name: "OrderNumber",
           required: true,
-          label: "订单号",
+          label: this.$t("orderNumber"),
           align: "left",
           field: "order_number",
           sortable: false,
@@ -142,7 +142,7 @@ export default {
         {
           name: "StartTime",
           required: true,
-          label: "创建时间",
+          label: this.$t("creationTime"),
           align: "left",
           field: "start_time",
           sortable: false,
@@ -150,7 +150,7 @@ export default {
         {
           name: "EndTime",
           required: true,
-          label: "完成时间",
+          label: this.$t("completionTime"),
           align: "left",
           field: "end_time",
           sortable: false,
@@ -210,7 +210,7 @@ export default {
           this.table_no = response.data.table_number
         })
         .catch((e) => {
-          this.notifyFail("载入餐桌信息失败")
+          this.notifyFail(this.$t("failedToLoadTableInfo"))
         })
     },
   },

@@ -62,7 +62,7 @@ def process_file(file_path, keywords, replacements):
                 # line = line.replace(keywords[i], replacements[i])
                 print(f"old line=>{line}")
                 # pattern = rf':\s*".+"'
-                pattern = rf'.:\s*"{keyword}"'
+                pattern = rf':\s*"{keyword}"'
                 match = re.search (pattern, line)
                 if match != None:
                     # lines[i] = line.replace(f'label:"{keyword}"', f'label:this.$t("{replacement}")')
@@ -73,8 +73,8 @@ def process_file(file_path, keywords, replacements):
                 match = re.search (regex_pattern, line)
                 if match:
                     replacement = re.sub(regex_pattern, r':\1='+ f'"$t(\'{replacement}\')"', match.group(0))
-                    line = re.sub(regex_pattern, replacement, line)
-                    print("replace two=>"+ line)
+                    lines[i] = re.sub(regex_pattern, replacement, line)
+                    print("replace two=>"+ lines[i])
                 regex_pattern = rf'>({keyword})<'
                 match = re.search (regex_pattern, line)
                 if match:

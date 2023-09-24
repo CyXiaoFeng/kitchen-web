@@ -2,7 +2,7 @@
   <q-page style="margin-top: 10px" class="row justify-center">
     <div style="max-width: 90vw">
       <div class="row justify-center">
-        <h4>历史订单(餐桌)</h4>
+        <h4>{{ $t("historicalOrders") }}({{ $t("table") }})</h4>
       </div>
       <div class="row justify-center">
         <q-card v-for="table in tables" v-bind:key="table.id" inline class="q-ma-sm">
@@ -12,9 +12,9 @@
             <span>{{ table.description }}</span>
           </q-card-section>
           <q-card-actions>
-            <q-btn icon="assignment" @click="checkHistoryReportByTable(table.id)" flat
-              >查看历史订单</q-btn
-            >
+            <q-btn icon="assignment" @click="checkHistoryReportByTable(table.id)" flat>{{
+              $t("viewHistoricalOrders")
+            }}</q-btn>
           </q-card-actions>
         </q-card>
       </div>

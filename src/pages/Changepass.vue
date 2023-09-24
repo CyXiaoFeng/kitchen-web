@@ -5,21 +5,26 @@
         v-model="form.password"
         type="password"
         @blur="$v.form.password.$touch"
-        float-label="原密码"
+        :float-label="$t('oldPassword')"
       />
       <q-input
         v-model="form.newPassword"
         type="password"
         @blur="$v.form.newPassword.$touch"
-        float-label="新密码"
+        :float-label="$t('newPassword')"
       />
       <q-input
         v-model="form.re_newPassword"
         type="password"
-        float-label="新密码"
+        :float-label="$t('newPassword')"
         @keyup.enter="changePass"
       />
-      <q-btn @click="changePass" color="primary" class="full-width" label="更新" />
+      <q-btn
+        @click="changePass"
+        color="primary"
+        class="full-width"
+        :label="$t('update')"
+      />
     </div>
   </q-page>
 </template>
@@ -31,7 +36,7 @@
 </style>
 
 <script>
-import { required, minLength } from "vuelidate/lib/validators";
+import { required, minLength } from "vuelidate/lib/validators"
 export default {
   name: "PageChangepass",
   data() {
@@ -42,7 +47,7 @@ export default {
         newPassword: "",
         re_newPassword: "",
       },
-    };
+    }
   },
   validations: {
     form: {
@@ -57,23 +62,23 @@ export default {
   },
   methods: {
     changePass() {
-      this.$v.form.$touch();
+      this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$q.notify({
-          message: "新密长度至少为4个字符",
+          message: `${$t("newPasswordLength")}4${$t("characters")}`,
           position: "top-right",
           avatar: "statics/sad.png",
-        });
-        return;
+        })
+        return
       }
 
       if (this.form.newPassword !== this.form.re_newPassword) {
         this.$q.notify({
-          message: "两次输入新密码不一致",
+          message: this.$t("newPasswordsMismatch"),
           position: "top-right",
           avatar: "statics/sad.png",
-        });
-        return;
+        })
+        return
       }
 
       if (this.form.newPassword !== this.form.re_newPassword) {
@@ -81,12 +86,12 @@ export default {
           color: "red",
           textColor: "white",
           icon: "thumb_up",
-          message: "两次输入不一致",
+          message: this.$t("inputsMismatch"),
           position: "top-right",
           avatar: "statics/sad.png",
           timeout: Math.random() * 5000 + 3000,
-        });
-        return;
+        })
+        return
       }
 
       this.$api
@@ -104,7 +109,7 @@ export default {
               position: "top-right",
               avatar: "statics/huaji.png",
               timeout: Math.random() * 5000 + 3000,
-            });
+            })
           } else {
             this.$q.notify({
               color: "red",
@@ -114,7 +119,7 @@ export default {
               position: "top-right",
               avatar: "statics/sad.png",
               timeout: Math.random() * 5000 + 3000,
-            });
+            })
           }
         })
         .catch((e) => {
@@ -122,13 +127,13 @@ export default {
             color: "red",
             textColor: "white",
             icon: "thumb_up",
-            message: "不合法的输入",
+            message: this.$t("invalidInput"),
             position: "top-right",
             avatar: "statics/sad.png",
             timeout: Math.random() * 5000 + 3000,
-          });
-        });
+          })
+        })
     },
   },
-};
+}
 </script>

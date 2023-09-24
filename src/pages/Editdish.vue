@@ -1,8 +1,8 @@
 <template>
   <q-page style="margin-top: 10px" class="row justify-center">
     <div style="width: 400px; max-width: 90vw">
-      <h4>编辑菜品</h4>
-      <p class="caption">上传图片(.jpg,.png,.jpeg)</p>
+      <h4>{{ $t("editDish") }}</h4>
+      <p class="caption">{{ $t("uploadImage") }}(.jpg,.png,.jpeg)</p>
       <q-uploader
         @finish="finishUploading"
         extensions=".jpg,.png,.jpeg"
@@ -17,13 +17,13 @@
         <template v-slot:prepend>
           <q-icon name="short_text" />
         </template>
-        <q-input v-model="dish_name" placeholder="菜名" />
+        <q-input v-model="dish_name" :placeholder="$t('dishName')" />
       </q-field>
       <q-field>
         <template v-slot:prepend>
           <q-icon name="description" />
         </template>
-        <q-input v-model="description" placeholder="菜品描述" />
+        <q-input v-model="description" :placeholder="$t('dishDescription')" />
       </q-field>
       <q-field>
         <template v-slot:prepend>
@@ -31,7 +31,7 @@
         </template>
         <q-select
           v-model="dish_tags"
-          label="添加菜品标签"
+          :label="$t('addDishTag')"
           @duplicate="duplicate"
           use-input
           use-chips
@@ -43,13 +43,16 @@
           <q-autocomplete :min-characters="1" @search="search" @selected="selected" />
         </q-select>
       </q-field>
-      <q-field label="平均制作工时(分钟)" :label-width="5">
+      <q-field
+        :label="`${$t('averagePreparationTime')}(${$t('minutes')}})`"
+        :label-width="5"
+      >
         <template v-slot:prepend>
           <q-icon name="timer" />
         </template>
         <q-input type="number" max-length="16" v-model="expected_cooking_time" />
       </q-field>
-      <q-field label="价格" :label-width="5">
+      <q-field :label="$t('price')" :label-width="5">
         <template v-slot:prepend>
           <q-icon name="money" />
         </template>
@@ -60,14 +63,14 @@
           @click="goPage('/dish-manage')"
           icon="keyboard return"
           color="purple-7"
-          label="返回菜品列表"
+          :label="$t('backToDishList')"
         />
         <q-btn
           @click="editDish"
           icon="play arrow"
           style="margin-left: 10px"
           color="blue"
-          label="更新"
+          :label="$t('update')"
         />
       </q-field>
     </div>
@@ -106,7 +109,7 @@ export default {
   },
   methods: {
     finishUploading(val) {
-      this.notifySuccess("上传完毕")
+      this.notifySuccess(this.$t("uploadComplete"))
       this.loadDishDetail(this.dishId)
     },
     loadDishDetail(dishId) {
@@ -131,7 +134,7 @@ export default {
     },
     editDish() {
       if (this.checkStringNull(this.dish_name)) {
-        this.notifyWarn("菜名不得为空")
+        this.notifyWarn(this.$t("dishNameRequired"))
         return
       }
       this.$api
@@ -158,7 +161,7 @@ export default {
       console.log(item.label)
     },
     duplicate(label) {
-      this.$q.notify(`"${label}" 重复标签`)
+      this.$q.notify(`"${label}" ${$t("duplicateTag")}`)
     },
     search(terms, done) {
       var searchParams = {}

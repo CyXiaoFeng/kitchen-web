@@ -2,7 +2,7 @@
   <q-page style="margin-top: 10px" class="row justify-center">
     <div style="max-width: 90vw; margin-top: 10px">
       <div class="row justify-center">
-        <h4>桌号：{{ table_no }}</h4>
+        <h4>{{ $t("tableNumber") }}：{{ table_no }}</h4>
       </div>
       <div class="row justify-center">
         <q-table
@@ -19,31 +19,31 @@
             <div class="q-pa-md q-gutter-sm">
               <q-btn
                 v-if="props != null"
-                title="返回餐桌视图"
+                :title="$t('backToTableView')"
                 color="purple-7"
-                label="返回"
+                :label="$t('back')"
                 icon="keyboard_return"
                 @click="goPage('/order-by-table')"
               />
               <q-btn
                 v-if="props != null"
-                title="分配菜品到厨位"
+                :title="$t('assignDishToKitchenStation')"
                 color="teal-6"
-                label="分配到厨位"
+                :label="$t('assignToKitchenStation')"
                 @click="assignItemsByTable"
                 icon="assignment_returned"
               />
               <q-btn
-                title="结束订单(已买单)"
+                :title="`${$t('endOrder')}(${$t('paid')})`"
                 color="positive"
-                label="结束本桌订单"
+                :label="$t('endOrderForTable')"
                 @click="finishOrder"
                 icon="done_all"
               />
               <q-btn
                 v-if="props != null"
-                title="加菜"
-                label="加菜"
+                :title="$t('addDish')"
+                :label="$t('addDish')"
                 color="blue"
                 @click="goToOrderPage"
                 icon="add"
@@ -51,7 +51,7 @@
               <q-btn
                 style="margin-left: 10px"
                 v-if="props != null"
-                title="刷新列表"
+                :title="$t('refreshList')"
                 round
                 color="blue"
                 @click="refreshItems"
@@ -61,27 +61,27 @@
           </template>
           <template v-slot:body-cell-Status="props">
             <q-td :props="props" style="min-width: 115px">
-              <q-chip v-if="props.value === 'unassigned'" small color="brown-4"
-                >未分配</q-chip
-              >
-              <q-chip v-else-if="props.value === 'waiting_assign'" small color="yellow"
-                >待分配</q-chip
-              >
-              <q-chip v-else-if="props.value === 'failed_assign'" small color="red"
-                >分配失败</q-chip
-              >
-              <q-chip v-else-if="props.value === 'assigned'" small color="lime-14"
-                >制作中</q-chip
-              >
+              <q-chip v-if="props.value === 'unassigned'" small color="brown-4">{{
+                $t("unassigned")
+              }}</q-chip>
+              <q-chip v-else-if="props.value === 'waiting_assign'" small color="yellow">{{
+                $t("pendingAssignment")
+              }}</q-chip>
+              <q-chip v-else-if="props.value === 'failed_assign'" small color="red">{{
+                $t("assignmentFailed")
+              }}</q-chip>
+              <q-chip v-else-if="props.value === 'assigned'" small color="lime-14">{{
+                $t("inProgress")
+              }}</q-chip>
               <q-chip
                 v-else-if="props.value === 'readytoserve'"
                 small
                 color="deep-orange-6"
-                >完成待取</q-chip
+                >{{ $t("readyForPickup") }}</q-chip
               >
-              <q-chip v-else-if="props.value === 'served'" small color="light-green-10"
-                >已上菜</q-chip
-              >
+              <q-chip v-else-if="props.value === 'served'" small color="light-green-10">{{
+                $t("served")
+              }}</q-chip>
               <q-chip v-else small color="green">props.value</q-chip>
             </q-td>
           </template>
@@ -141,7 +141,7 @@
                 dense
                 glossy
                 color="purple-13"
-                label="划菜"
+                :label="$t('markAsCooked')"
               />
             </q-td>
           </template>
@@ -177,7 +177,7 @@ export default {
         {
           name: "OrderNo",
           required: true,
-          label: "订单号",
+          label: this.$t("orderNumber"),
           align: "left",
           field: "order_number",
           sortable: false,
@@ -185,7 +185,7 @@ export default {
         {
           name: "DishName",
           required: true,
-          label: "菜名",
+          label: this.$t("dishName"),
           align: "left",
           field: "dish_name",
           sortable: true,
@@ -193,7 +193,7 @@ export default {
         {
           name: "Status",
           required: true,
-          label: "状态",
+          label: this.$t("status"),
           align: "left",
           field: "status",
           sortable: true,
@@ -201,7 +201,7 @@ export default {
         {
           name: "Description",
           required: true,
-          label: "备注",
+          label: this.$t("note"),
           align: "left",
           field: "description",
           sortable: true,
@@ -209,7 +209,7 @@ export default {
         {
           name: "DishCount",
           required: true,
-          label: "数量",
+          label: this.$t("quantity"),
           align: "left",
           field: "dish_count",
           sortable: true,
@@ -217,7 +217,7 @@ export default {
         {
           name: "ProducerNumber",
           required: true,
-          label: "分配厨位",
+          label: this.$t("assignKitchenStation"),
           align: "left",
           field: "producer_number",
           sortable: true,
@@ -225,14 +225,14 @@ export default {
         {
           name: "Action",
           required: true,
-          label: "操作",
+          label: this.$t("operation"),
           align: "left",
           sortable: false,
         },
         {
           name: "LastUpdateTime",
           required: true,
-          label: "更新时间",
+          label: this.$t("updateTime"),
           align: "left",
           field: "last_update_time",
           sortable: true,
@@ -304,7 +304,7 @@ export default {
     },
     assignItemsByTable() {
       if (this.order_items == null || this.order_items.length < 1) {
-        this.notifyWarn("无可分配菜品")
+        this.notifyWarn(this.$t("noDishesAvailableForAssignment"))
         return
       }
       var activeOrderId = this.order_items[0].order_id
@@ -322,7 +322,7 @@ export default {
           }
         })
         .catch((e) => {
-          this.notifyFail("未知错误")
+          this.notifyFail(this.$t("unknownError"))
         })
     },
     served(itemId) {
@@ -337,13 +337,13 @@ export default {
           this.refreshItems()
         })
         .catch((e) => {
-          this.notifyFail("未知错误served")
+          this.notifyFail(this.$t("unknownError"))
         })
     },
     openEditDescriptionDialog(itemId, value) {
       this.$q
         .dialog({
-          title: "修改备注",
+          title: this.$t("modifyNote"),
           prompt: {
             model: value,
             type: "text", // optional
@@ -373,7 +373,7 @@ export default {
           }
         })
         .catch((e) => {
-          this.notifyFail("未知错误updateItemDescription")
+          this.notifyFail(this.$t("unknownError"))
         })
     },
     updateUnassignedItemCount(itemId, count) {
@@ -394,7 +394,7 @@ export default {
           }
         })
         .catch((e) => {
-          this.notifyFail("未知错误od1")
+          this.notifyFail(this.$t("unknownError"))
         })
     },
     refreshItems() {
@@ -445,7 +445,7 @@ export default {
           this.table_no = table.table_number
         })
         .catch((e) => {
-          this.notifyFail("未知错误ob")
+          this.notifyFail(this.$t("unknownError"))
         })
     },
   },

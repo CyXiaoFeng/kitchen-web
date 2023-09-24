@@ -2,14 +2,14 @@
   <q-page style="margin-top: 10px" class="row justify-center">
     <div style="max-width: 90vw">
       <div class="row justify-center">
-        <h4>点菜分配厨位视图</h4>
+        <h4>{{ $t("orderAssignmentKitchenView") }}</h4>
       </div>
       <div class="row justify-center" style="margin-bottom: 10px">
         <q-toggle
           @input="switchOnline"
           v-model="online_only"
           color="secondary"
-          label="不显示离线"
+          :label="$t('hideOffline')"
         />
       </div>
       <div class="row justify-center">
@@ -26,7 +26,7 @@
           style="max-width: 400px"
         >
           <q-card-title>
-            厨位:{{ kit.producer_number }}
+            {{ $t("kitchenStation") }}:{{ kit.producer_number }}
             <span>{{ kit.description }}</span>
           </q-card-title>
           <q-list>
@@ -35,9 +35,10 @@
                 <q-icon name="restaurant menu" />
               </q-item-section>
               <q-item-section>
-                >{{ l.dish_name }}-{{ l.dish_count }}份-<label style="color: red">{{
-                  l.description
-                }}</label>
+                >{{ l.dish_name }}-{{ l.dish_count }}{{ $t("portion") }}-<label
+                  style="color: red"
+                  >{{ l.description }}</label
+                >
                 >
               </q-item-section>
               <q-item-section>
@@ -45,16 +46,22 @@
                   dense
                   @click="ready2serve(l.item_id)"
                   color="primary"
-                  label="完成"
+                  :label="$t('complete')"
                 />
               </q-item-section>
             </q-item>
           </q-list>
           <q-item>
             <q-item-section>
-              <label style="color: red" v-if="kit.status === 'online'">在线</label>
-              <label style="color: #d200d2" v-if="kit.status === 'blocking'">阻挡</label>
-              <label style="color: gray" v-if="kit.status === 'offline'">离线</label>
+              <label style="color: red" v-if="kit.status === 'online'">{{
+                $t("online")
+              }}</label>
+              <label style="color: #d200d2" v-if="kit.status === 'blocking'">{{
+                $t("blocked")
+              }}</label>
+              <label style="color: gray" v-if="kit.status === 'offline'">{{
+                $t("offline")
+              }}</label>
             </q-item-section>
           </q-item>
         </q-card>
@@ -129,7 +136,7 @@ export default {
           this.loadKPositionsWithItems()
         })
         .catch((e) => {
-          this.notifyFail("未知错误ready2serve")
+          this.notifyFail(`${$t("unknownError")}ready2serve`)
         })
     },
     onOk() {
@@ -171,7 +178,7 @@ export default {
         })
         .catch((e) => {
           console.log(e.response)
-          this.notifyFail("获取厨位数据失败")
+          this.notifyFail(this.$t("failedToRetrieveKitchenData"))
         })
     },
   },

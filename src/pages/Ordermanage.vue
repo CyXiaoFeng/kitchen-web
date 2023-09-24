@@ -1,7 +1,7 @@
 <template>
   <q-page style="margin-top: 10px" padding class="docs-table">
     <div class="row justify-center">
-      <h4>进行中订单</h4>
+      <h4>{{ $t("ongoingOrders") }}</h4>
     </div>
     <q-table
       :rows="orders"
@@ -15,7 +15,7 @@
       <template v-slot:top-right="props">
         <q-btn
           v-if="props != null"
-          title="刷新订单"
+          :title="$t('refreshOrder')"
           round
           color="blue"
           @click="refreshItems"
@@ -28,7 +28,7 @@
           color="primary"
           @click="newOrder"
           icon-right="playlist_add"
-          label="新订单"
+          :label="$t('newOrder')"
         />
       </template>
       <template v-slot:body-cell-OrderNumber="props">
@@ -46,7 +46,7 @@
             @click="deleteOrderIfNoItems(props.row.id)"
             dense
             icon="delete"
-            label="删除订单"
+            :label="$t('deleteOrder')"
           />
         </q-td>
       </template>
@@ -72,7 +72,7 @@ export default {
         {
           name: "OrderNumber",
           required: true,
-          label: "订单号",
+          label: this.$t("orderNumber"),
           align: "left",
           field: "order_number",
           sortable: false,
@@ -92,12 +92,12 @@ export default {
           align: "left",
           field: "order_status",
           sortable: false,
-          format: (val) => (val == "active" ? "进行中" : "完结"),
+          format: (val) => (val == "active" ? this.$t("ongoing") : this.$t("finish")),
         },
         {
           name: "StartTime",
           required: true,
-          label: "创建时间",
+          label: this.$t("creationTime"),
           align: "left",
           field: "start_time",
           sortable: false,
@@ -105,7 +105,7 @@ export default {
         {
           name: "Action",
           required: true,
-          label: "操作",
+          label: this.$t("operation"),
           align: "left",
           sortable: false,
           format: (val) => (val ? "" : val),
@@ -121,9 +121,9 @@ export default {
     deleteOrderIfNoItems(orderId) {
       this.$q
         .dialog({
-          title: "确认删除订单",
-          ok: "是",
-          cancel: "否",
+          title: this.$t("confirmDeleteOrder"),
+          ok: this.$t("yes"),
+          cancel: this.$t("no"),
         })
         .onOk(() => {
           this.$api

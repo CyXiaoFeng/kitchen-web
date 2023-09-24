@@ -1,14 +1,20 @@
 <template>
   <q-page style="margin-top: 10px" padding class="justify-center">
     <div class="row justify-center">
-      <q-btn @click="newUser" color="blue" round title="新建用户" icon="add" />
+      <q-btn
+        @click="newUser"
+        color="blue"
+        round
+        :title="$t('createNewUser')"
+        icon="add"
+      />
       <q-btn-group push>
         <q-btn
           color="blue"
           @click="filterRole('')"
           glossy
           text-color="black"
-          label="所有"
+          :label="$t('all')"
           icon="done_all"
         />
         <q-btn
@@ -16,21 +22,21 @@
           @click="filterRole('管理员')"
           glossy
           text-color="black"
-          label="管理员"
+          :label="$t('admin')"
         />
         <q-btn
           color="blue"
           @click="filterRole('厨师')"
           glossy
           text-color="black"
-          label="厨师"
+          :label="$t('chef')"
         />
         <q-btn
           color="blue"
           @click="filterRole('服务员')"
           glossy
           text-color="black"
-          label="服务员"
+          :label="$t('waiter')"
         />
       </q-btn-group>
     </div>
@@ -38,8 +44,8 @@
       <q-input
         v-model="search_name"
         :debounce="600"
-        placeholder="搜用户"
-        float-label="搜用户"
+        :placeholder="$t('searchUser')"
+        :float-label="$t('searchUser')"
       >
         <template v-slot:prepend>
           <q-icon name="search" />
@@ -63,22 +69,24 @@
                 <q-list link>
                   <q-item v-close-overlay>
                     <q-item-section
-                      label="角色"
+                      :label="$t('role')"
                       @click="assignRole(item.user_id, item.role_id)"
-                      >角色</q-item-section
+                      >{{ $t("role") }}</q-item-section
                     >
                   </q-item>
                   <q-item v-close-overlay>
-                    <q-item-section label="重置密码" @click="passwordReset(item.user_id)"
-                      >重置密码</q-item-section
+                    <q-item-section
+                      :label="$t('resetPassword')"
+                      @click="passwordReset(item.user_id)"
+                      >{{ $t("resetPassword") }}</q-item-section
                     >
                   </q-item>
                   <q-item v-close-overlay>
                     <q-item-section
                       icon="delete"
-                      label="删除"
+                      :label="$t('delete')"
                       @click="deleteUser(item.user_id, item.username)"
-                      >删除</q-item-section
+                      >{{ $t("delete") }}</q-item-section
                     >
                   </q-item>
                 </q-list>
@@ -109,17 +117,22 @@
       <!-- 这里可能使用<q-dialog>的"title"属性 -->
       <q-card style="width: 700px; max-width: 80vw">
         <q-card-section>
-          <span>新建用户</span>
+          <span>{{ $t("createNewUser") }}</span>
         </q-card-section>
         <q-card-section>
-          <q-field icon="account_circle" label="用户名" :label-width="4">
+          <q-field icon="account_circle" :label="$t('username')" :label-width="4">
             <q-input v-model="username" />
           </q-field>
-          <q-select v-model="role_id" float-label="选择角色" radio :options="role_list" />
+          <q-select
+            v-model="role_id"
+            :float-label="$t('selectRole')"
+            radio
+            :options="role_list"
+          />
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn color="primary" label="创建" @click="executeNewUser()" />
+          <q-btn color="primary" :label="$t('create')" @click="executeNewUser()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -180,7 +193,7 @@ export default {
     assignRole(uid, roleId) {
       this.$q
         .dialog({
-          title: "权限角色",
+          title: this.$t("permissionRole"),
           options: {
             type: "radio",
             model: "",
@@ -197,7 +210,7 @@ export default {
               color: "orange",
               textColor: "white",
               icon: "thumb_up",
-              message: "您需要先选中一个角色哦",
+              message: this.$t("selectARole"),
               position: "top-right",
               avatar: "statics/sad.png",
             })
@@ -226,10 +239,10 @@ export default {
     deleteUser(userId, username) {
       this.$q
         .dialog({
-          title: "确认",
-          message: "确认删除该用户" + username + "吗？",
-          ok: "是",
-          cancel: "否",
+          title: this.$t("confirm"),
+          message: `${this.$t("deleteConfirmation")}:${username}?`,
+          ok: this.$t("yes"),
+          cancel: this.$t("no"),
         })
         .onOk(() => {
           this.executeDeleteUser(userId)
@@ -291,7 +304,7 @@ export default {
           color: "red",
           textColor: "white",
           icon: "thumb_up",
-          message: "用户名和角色不能为空",
+          message: this.$t("usernameAndRoleRequired"),
           position: "top-right",
           avatar: "statics/sad.png",
         })
@@ -332,7 +345,7 @@ export default {
             color: "red",
             textColor: "white",
             icon: "thumb_up",
-            message: "未知错误",
+            message: this.$t("unknownError"),
             position: "top-right",
             avatar: "statics/sad.png",
           })

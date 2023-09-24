@@ -2,8 +2,8 @@
   <q-page class="flex flex-center">
     <div style="width: 500px; max-width: 90vw; border: 1px dashed #000">
       <q-btn
-        title="返回"
-        label="返回"
+        :title="$t('back')"
+        :label="$t('back')"
         color="purple-7"
         @click="back"
         style="margin-top: 15px; margin-left: 10px; margin-bottom: 10px"
@@ -11,8 +11,8 @@
       />
       <q-btn
         :disabled="order_status === 'finished'"
-        title="加菜"
-        label="加菜"
+        :title="$t('addDish')"
+        :label="$t('addDish')"
         color="primary"
         @click="addItem"
         style="margin-top: 15px; margin-left: 10px; margin-bottom: 10px"
@@ -21,18 +21,18 @@
       <q-select
         filter
         :readonly="order_status === 'finished'"
-        label="桌号"
+        :label="$t('tableNumber')"
         v-model="table_option"
         :options="table_options"
       />
       <q-select
         :readonly="order_status === 'finished'"
         filter
-        label="菜品"
+        :label="$t('dish')"
         v-model="dish_option"
         :options="dish_options"
       />
-      <!-- <q-input style="width:30px;margin-left: 10px;" v-model="count" type="number" float-label="数量" /> -->
+      <!-- <q-input style="width:30px;margin-left: 10px;" v-model="count" type="number" :float-label="$t('quantity')" /> -->
       <div
         style="width: 100px; margin-left: 10px; margin-top: 15px"
         class="row items-center no-wrap"
@@ -57,9 +57,9 @@
           @click="changeCount(1)"
           class="q-mr-sm"
         />
-        {{ count }}份
+        {{ count }}{{ $t("portion") }}
       </div>
-      <q-input style="margin-left: 15px" v-model="description" label="备注" />
+      <q-input style="margin-left: 15px" v-model="description" :label="$t('note')" />
     </div>
   </q-page>
 </template>
@@ -105,7 +105,7 @@ export default {
         this.checkStringNull(this.dish_option) ||
         this.checkStringNull(this.count)
       ) {
-        this.notifyFail("请检查填写的条目(づ￣ 3￣)づ")
+        this.notifyFail(this.$t("pleaseCheckEntries"))
         return
       }
       this.$api
@@ -130,7 +130,7 @@ export default {
             color: "red",
             textColor: "white",
             icon: "thumb_up",
-            message: "未知错误",
+            messag: this.$t("unknownError"),
             position: "top-right",
             avatar: "statics/sad.png",
           })
@@ -156,7 +156,7 @@ export default {
           })
         })
         .catch((e) => {
-          this.notifyFail("未知错误oc")
+          this.notifyFail(`${$t("unknownError")}oc`)
         })
     },
     loadAllTables() {
@@ -173,7 +173,7 @@ export default {
           })
         })
         .catch((e) => {
-          this.notifyFail("未知错误oa")
+          this.notifyFail(`${$t("unknownError")}oa`)
         })
     },
     loadOrderDetail(orderId) {
@@ -186,7 +186,7 @@ export default {
           this.order_status = order.order_status
         })
         .catch((e) => {
-          this.notifyFail("未知错误ob")
+          this.notifyFail(`${$t("unknownError")}oc`)
         })
     },
   },

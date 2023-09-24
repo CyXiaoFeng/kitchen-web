@@ -2,14 +2,14 @@
   <q-page style="margin-top: 10px" class="row justify-center">
     <div style="max-width: 90vw">
       <div class="row justify-center">
-        <h4>菜品管理</h4>
+        <h4>{{ $t("dishManagement") }}</h4>
       </div>
       <div class="row justify-center">
         <q-btn
           @click="newDish"
           color="blue"
-          label="录入菜品"
-          title="录入菜品"
+          :label="$t('enterDish')"
+          :title="$t('enterDish')"
           icon="playlist_add"
         />
       </div>
@@ -21,7 +21,7 @@
           multiple
           @update:modelValue="selectChange"
           color="purple"
-          label="按标签过滤"
+          :label="$t('filterByTag')"
           v-model="multi_select_tags"
           :options="dish_tags"
         />
@@ -43,7 +43,7 @@
           />
           <div>
             <a href="javascript:" @click.prevent="goPage('/edit-dish/' + dish.id)"
-              >{{ dish.name }}({{ dish.price }}元)</a
+              >{{ dish.name }}({{ dish.price }}{{ $t("yuan") }})</a
             >
           </div>
           <q-card-section>
@@ -61,7 +61,9 @@
           </q-card-section>
           <q-separator />
           <q-card-actions>
-            <q-btn @click="deleteDish(dish.id)" flat color="primary">删除</q-btn>
+            <q-btn @click="deleteDish(dish.id)" flat color="primary">{{
+              $t("delete")
+            }}</q-btn>
           </q-card-actions>
         </q-card>
       </div>
@@ -102,9 +104,9 @@ export default {
     deleteDish(id) {
       this.$q
         .dialog({
-          title: "删除确认",
-          ok: "是",
-          cancel: "否",
+          title: this.$t("deleteConfirmation"),
+          ok: this.$t("yes"),
+          cancel: this.$t("no"),
         })
         .onOk(() => {
           this.$api

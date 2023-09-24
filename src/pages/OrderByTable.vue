@@ -2,7 +2,7 @@
   <q-page style="margin-top: 10px" class="row justify-center">
     <div style="max-width: 90vw">
       <div class="row justify-center">
-        <h4>餐桌视图</h4>
+        <h4>{{ $t("tableView") }}</h4>
       </div>
       <div class="q-pa-md row items-start q-gutter-md">
         <q-card
@@ -16,7 +16,7 @@
             <a
               href="javascript:"
               @click.prevent="goPage('/order-detail-by-table/' + table.id)"
-              >桌号:{{ table.table_number }}</a
+              >{{ $t("tableNumber") }}:{{ table.table_number }}</a
             >
             <span>{{ table.description }}</span>
           </q-card-section>
@@ -26,24 +26,24 @@
                 <q-icon name="restaurant menu" />
               </q-item-section>
               <q-item-section>
-                {{ l.dish_name }}-{{ l.dish_count }}份-
+                {{ l.dish_name }}-{{ l.dish_count }}{{ $t("portion") }}-
                 <label style="color: red">
                   {{ l.description }}
                 </label>
               </q-item-section>
               <q-item-section>
-                <q-chip v-if="l.status === 'readytoserve'" small color="deep-orange-6"
-                  >完成待取</q-chip
-                >
-                <q-chip v-else-if="l.status === 'unassigned'" small color="brown-4"
-                  >未分配</q-chip
-                >
-                <q-chip v-else-if="l.status === 'assigned'" small color="lime-14"
-                  >制作中</q-chip
-                >
-                <q-chip v-else-if="l.status === 'served'" small color="light-green-10"
-                  >已上菜</q-chip
-                >
+                <q-chip v-if="l.status === 'readytoserve'" small color="deep-orange-6">{{
+                  $t("readyForPickup")
+                }}</q-chip>
+                <q-chip v-else-if="l.status === 'unassigned'" small color="brown-4">{{
+                  $t("unassigned")
+                }}</q-chip>
+                <q-chip v-else-if="l.status === 'assigned'" small color="lime-14">{{
+                  $t("inProgress")
+                }}</q-chip>
+                <q-chip v-else-if="l.status === 'served'" small color="light-green-10">{{
+                  $t("served")
+                }}</q-chip>
                 <q-chip v-else small color="brown">{{ l.status }}</q-chip>
               </q-item-section>
               <q-item-section>
@@ -54,7 +54,7 @@
                   dense
                   glossy
                   color="purple-13"
-                  label="划菜"
+                  :label="$t('markAsCooked')"
                 />
               </q-item-section>
             </q-item>
@@ -117,7 +117,7 @@ export default {
           this.loadTables()
         })
         .catch((e) => {
-          this.notifyFail("未知错误served")
+          this.notifyFail(`${$t("unknownError")}served`)
         })
     },
     onOk() {
