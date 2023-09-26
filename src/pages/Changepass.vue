@@ -1,22 +1,27 @@
+<!-- 
+  TODO:下面的连接专门讲解了vuelidate的用法，比较详细
+  https://learnvue.co/articles/intro-to-vuelidate#using-vuelidate-with-the-composition-api 
+  -->
 <template>
   <q-page class="flex flex-center">
     <div style="width: 500px; max-width: 90vw">
       <q-input
-        v-model="form.password"
+        v-model="state.form.password"
         type="password"
-        @blur="$v.form.password.$touch"
-        :float-label="$t('oldPassword')"
+        @blur="v$.form.password.$touch"
+        :label="$t('oldPassword')"
       />
       <q-input
-        v-model="form.newPassword"
+        v-model="state.form.newPassword"
         type="password"
-        @blur="$v.form.newPassword.$touch"
-        :float-label="$t('newPassword')"
+        @blur="v$.form.newPassword.$touch"
+        :label="$t('newPassword')"
       />
       <q-input
-        v-model="form.re_newPassword"
+        v-model="state.form.confirmPassword"
         type="password"
-        :float-label="$t('newPassword')"
+        @blur="v$.form.confirmPassword.$touch"
+        :label="$t('newPassword')"
         @keyup.enter="changePass"
       />
       <q-btn
@@ -36,43 +41,61 @@
 </style>
 
 <script>
-import { required, minLength } from "vuelidate/lib/validators"
+import { reactive, computed } from "vue"
+import { useVuelidate } from "@vuelidate/core"
+import { minLength, required, sameAs } from "@vuelidate/validators"
+
 export default {
   name: "PageChangepass",
-  data() {
+  data: () => {
     return {
       username: "",
       form: {
         password: "",
-        newPassword: "",
-        re_newPassword: "",
+        confirmPassword: "",
       },
     }
   },
-  validations: {
-    form: {
-      password: {
-        required,
+  setup: () => {
+    const state = reactive({
+      username: "",
+      form: {
+        password: "",
+        newPassword: "",
+        confirmPassword: "",
       },
-      newPassword: {
-        required,
-        minLength: minLength(4),
-      },
-    },
+    })
+    const rules = computed(() => {
+      return {
+        form: {
+          password: { required },
+          newPassword: {
+            required,
+            minLength: minLength(4),
+          },
+          confirmPassword: {
+            required,
+            sameAs: sameAs(state.form.newPassword),
+          },
+        },
+      }
+    })
+    const v$ = useVuelidate(rules, state)
+    return { state, v$ }
   },
   methods: {
     changePass() {
-      this.$v.form.$touch()
-      if (this.$v.form.$error) {
+      if (this.v$.form.newPassword.$error) {
         this.$q.notify({
-          message: `${$t("newPasswordLength")}4${$t("characters")}`,
+          message: `${this.$t("newPasswordLength")} 4 ${this.$t("characters")}`,
           position: "top-right",
           avatar: "statics/sad.png",
         })
         return
       }
-
-      if (this.form.newPassword !== this.form.re_newPassword) {
+      if (this.v$.form.confirmPassword.$error) {
+        console.log(this.state.form.newPassword)
+        console.log(this.state.form.confirmPassword)
         this.$q.notify({
           message: this.$t("newPasswordsMismatch"),
           position: "top-right",
@@ -81,23 +104,10 @@ export default {
         return
       }
 
-      if (this.form.newPassword !== this.form.re_newPassword) {
-        this.$q.notify({
-          color: "red",
-          textColor: "white",
-          icon: "thumb_up",
-          message: this.$t("inputsMismatch"),
-          position: "top-right",
-          avatar: "statics/sad.png",
-          timeout: Math.random() * 5000 + 3000,
-        })
-        return
-      }
-
       this.$api
         .put("/api/v1/user/change-pass", {
-          password: this.form.password,
-          new_password: this.form.newPassword,
+          password: this.state.form.password,
+          new_password: this.state.form.newPassword,
         })
         .then((response) => {
           if (response.data.ok === true) {
