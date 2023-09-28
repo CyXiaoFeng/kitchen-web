@@ -154,14 +154,14 @@ export default {
             .delete("/api/v1/table/" + id)
             .then((response) => {
               if (response.data.ok === true) {
-                this.notifySuccess(response.data.message)
+                this.notifySuccess(this.$t(response.data.message))
               } else {
-                this.notifyFail(response.data.message)
+                this.notifyFail(this.$t(response.data.message))
               }
               this.loadTables()
             })
             .catch((e) => {
-              this.notifyFail(e.response.data.message)
+              this.notifyFail(this.$t(e.response.data.message))
             })
         })
         .catch(() => {
@@ -216,15 +216,15 @@ export default {
         })
         .then((response) => {
           if (response.data.ok === true) {
-            this.notifySuccess(response.data.message)
+            this.notifySuccess(this.$t(response.data.message))
           } else {
-            this.notifyFail(response.data.message)
+            this.notifyFail(this.$t(response.data.message))
           }
           this.loadTables()
           this.editTableDialog = false
         })
         .catch((e) => {
-          this.notifyFail(e.response.data.message)
+          this.notifyFail(this.$t(e.response.data.message))
         })
     },
     executeNewTable() {
@@ -239,7 +239,7 @@ export default {
               color: "green",
               textColor: "white",
               icon: "thumb_up",
-              message: response.data.message,
+              message: this.$t(response.data.message),
               position: "top-right",
               avatar: "statics/huaji.png",
             })
@@ -250,7 +250,7 @@ export default {
               color: "red",
               textColor: "white",
               icon: "thumb_up",
-              message: response.data.message,
+              message: this.$t(response.data.message),
               position: "top-right",
               avatar: "statics/sad.png",
             })

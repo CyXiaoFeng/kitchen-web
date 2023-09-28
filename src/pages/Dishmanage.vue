@@ -113,15 +113,14 @@ export default {
             .delete("/api/v1/dish/" + id)
             .then((response) => {
               if (response.data.ok === true) {
-                this.notifySuccess(response.data.message)
+                this.notifySuccess(this.getResponseMsg(response.data.message))
               } else {
-                this.notifyFail(response.data.message)
+                this.notifyFail(this.getResponseMsg(response.data.message))
               }
-              this.loadDish()
+              this.loadDish("")
             })
             .catch((e) => {
-              console.log(e.response.data.message)
-              this.notifyFail(e.response.data.message)
+              console.log(e)
             })
         })
     },

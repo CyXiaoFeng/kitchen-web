@@ -321,7 +321,7 @@ export default {
               color: "green",
               textColor: "white",
               icon: "thumb_up",
-              message: response.data.message,
+              message: this.$t(response.data.message),
               position: "top-right",
               avatar: "statics/huaji.png",
             })

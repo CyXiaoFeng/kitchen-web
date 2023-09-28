@@ -5,6 +5,18 @@ export default {
     }
   },
   methods: {
+    resMsg(res) {
+      const regex = /\{([^}]+)\}/g;
+      if (regex.test(res)) {
+        const replacedStr = res.replace(regex, (match, p1)=> {
+          return "${this.$t('" + p1 + "')}";
+        });
+        return eval("`"+replacedStr+"`");
+      } else {
+        return res
+      }
+      
+    },
     goPage (val) {
       this.$router.push(val)
     },

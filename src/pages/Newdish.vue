@@ -78,7 +78,7 @@ export default {
   methods: {
     createDish() {
       if (this.checkStringNull(this.dish_name)) {
-        this.notifyWarn(this.$t("dishNameRequired"))
+        this.notifyWarn(this.getResponseMsg("dishNameRequired"))
         return
       }
       this.$api
@@ -95,7 +95,7 @@ export default {
               color: "green",
               textColor: "white",
               icon: "thumb_up",
-              message: response.data.message,
+              message: this.resMsg(response.data.message),
               position: "top-right",
               avatar: "statics/huaji.png",
             })
@@ -105,7 +105,7 @@ export default {
               color: "red",
               textColor: "white",
               icon: "thumb_up",
-              message: response.data.message,
+              message: this.resMsg(response.data.message),
               position: "top-right",
               avatar: "statics/sad.png",
             })

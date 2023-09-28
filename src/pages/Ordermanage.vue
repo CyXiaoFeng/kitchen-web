@@ -173,7 +173,7 @@ export default {
         .post("/api/v1/order/new")
         .then((response) => {
           if (response.data.ok === true) {
-            this.notifySuccess(response.data.message)
+            this.notifySuccess(this.$t(response.data.message))
             this.goPage("/order-detail/" + response.data.data)
           }
         })
