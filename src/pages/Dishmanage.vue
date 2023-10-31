@@ -113,9 +113,9 @@ export default {
             .delete("/api/v1/dish/" + id)
             .then((response) => {
               if (response.data.ok === true) {
-                this.notifySuccess(this.getResponseMsg(response.data.message))
+                this.notifySuccess(this.resMsg(response.data.message))
               } else {
-                this.notifyFail(this.getResponseMsg(response.data.message))
+                this.notifyFail(this.resMsg(response.data.message))
               }
               this.loadDish("")
             })

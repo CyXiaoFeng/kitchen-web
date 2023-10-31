@@ -78,7 +78,7 @@ export default {
   methods: {
     createDish() {
       if (this.checkStringNull(this.dish_name)) {
-        this.notifyWarn(this.getResponseMsg("dishNameRequired"))
+        this.notifyWarn(this.resMsg("dishNameRequired"))
         return
       }
       this.$api
